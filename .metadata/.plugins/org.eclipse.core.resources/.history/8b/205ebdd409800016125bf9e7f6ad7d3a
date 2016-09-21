@@ -1,0 +1,142 @@
+// Copyright (c) 2013-2014 Sandstorm Development Group, Inc. and contributors
+// Licensed under the MIT License:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+package org.capnproto;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+
+
+public final class PackedInputStream implements ReadableByteChannel {
+
+	final BufferedInputStream inner;
+
+	public PackedInputStream(BufferedInputStream input) {
+		this.inner = input;
+	}
+
+	public int read(ByteBuffer outBuf) throws IOException {				// -> see CapnProto - packed encoding
+
+		int len = outBuf.remaining();			// number of free bytes left on the byte buffer to be read on
+		if (len == 0) { return 0; }				// if there is no more space left, return that 0 bytes were written
+
+		if (len % 8 != 0) { throw new Error("PackedInputStream reads must be word-aligned"); }		// if an unusual number of bytes is left on the bytebuffer, means a number of bytes, which can't be aligned to word boundaries 
+		//-> makes sure, that the output of this method is aligned to word boundaries
+		int outPtr = outBuf.position();					// position of the next free byte of the output buffer
+		int outEnd = outPtr + len;						// position of the last free byte of the output buffer
+
+		ByteBuffer inBuf = this.inner.getReadBuffer();		// gets the buffer of this InputStream, means the buffered bytes of the actual input
+
+		while (true) {
+
+			byte tag = 0;
+
+			if (inBuf.remaining() < 10) {							// If there are less than 10 bytes remaining in the Input buffer, probably the last word
+				if (outBuf.remaining() == 0) { return len; }		// if there is no more space in the output buffer, return the number of read bytes
+
+				if (inBuf.remaining() == 0) {						// if the buffer of the input channel is full read, it will be cleared and filled with new bytes from the channel
+					inBuf = this.inner.getReadBuffer();
+					continue;
+				}
+
+				//# We have at least 1, but not 10, bytes available. We need to read
+				//# slowly, doing a bounds check on each byte.
+
+				tag = inBuf.get();									// gets the Tag of the next word
+
+				for (int i = 0; i < 8; ++i) {
+					if ((tag & (1 << i)) != 0) {					// checks, which bits of the Tag are set
+						if (inBuf.remaining() == 0) {				// if there are no bytes left to read from the input buffer
+							inBuf = this.inner.getReadBuffer();		// it will be filled wit new bytes from the channel
+						}
+						outBuf.put(inBuf.get());					// the next byte of input is written to the output channel
+					} else {
+						outBuf.put((byte) 0);						// if the specific bit wasn't set, a zero-byte is written to the output
+					}
+				}
+
+				if (inBuf.remaining() == 0 && (tag == 0 || tag == (byte) 0xff)) {		// if the input buffer is all read, but the previous tag is one of the special ones(indicating, that there must be more information on the channel)
+					inBuf = this.inner.getReadBuffer();									// , the input buffer is filled with new bytes from input
+				}
+			} else {							//if there are more than 10 bytes available to read from the BufferedInput
+
+				tag = inBuf.get();					// reads the next byte as a Tag-byte(see description of Capnp)			
+				for (int n = 0; n < 8; ++n) {		// iterates through the Byte and checks which Bit is set
+					boolean isNonzero = (tag & (1 << n)) != 0;						// shifts the 1 through an 8Bit blob and checks, if that specific bit in the tag is set or not
+					outBuf.put((byte) (inBuf.get() & (isNonzero ? -1 : 0)));		// if the bit is set, then it writes the next byte from the input stream to the output buffer, If not it writes a zero byte
+					inBuf.position(inBuf.position() + (isNonzero ? 0 : -1));		// updates the position of the input buffer; if the bit was set, the position stays on the current element
+																				// if the Bit was 0, the position is set pack to the previous position
+				}
+			}
+
+			if (tag == 0) {														 	// checks, if the read tag is the special zero-tag
+				if (inBuf.remaining() == 0) { throw new Error("Should always have non-empty buffer here."); }					// at this point, the input must always contain more information, because of the capnp packing-description
+
+				int runLength = (0xff & (int) inBuf.get()) * 8;																	// checks, how many zero-words will follow the 00-tag
+
+				if (runLength > outEnd - outPtr) { throw new Error("Packed input did not end cleanly on a segment boundary"); }	// if there are more zero-words to be written than there is space in the output buffer
+
+				for (int i = 0; i < runLength; ++i) {								// writes the given number of zero-words to the output buffer
+					outBuf.put((byte) 0);
+				}
+			} else if (tag == (byte) 0xff) {										// checks, if the read tag is the special ff-tag
+
+				int runLength = (0xff & (int) inBuf.get()) * 8;						// checks how many words, following this tag should be interpreted as unpacked
+
+				if (inBuf.remaining() >= runLength) {								// if there are more words to be written, than the unpacked ones
+					//# Fast path.
+					ByteBuffer slice = inBuf.slice();
+					slice.limit(runLength);
+					outBuf.put(slice);
+					inBuf.position(inBuf.position() + runLength);					// writes the next number of bytes(specified by runLength) straight to the output buffer 
+				} else {
+					//# Copy over the first buffer, then do one big read for the rest.
+					runLength -= inBuf.remaining();
+					outBuf.put(inBuf);												// write the first part of the unpacked words to the output buffer
+
+					ByteBuffer slice = outBuf.slice();								// 
+					slice.limit(runLength);
+
+					this.inner.read(slice);											// does a normal read for the rest of the unpacked words
+					outBuf.position(outBuf.position() + runLength);					// updates position
+
+					if (outBuf.remaining() == 0) {									// if there is no more space left on the output buffer, return the number of written bytes
+						return len;
+					} else {
+						inBuf = this.inner.getReadBuffer();							// if there is still space left, read new bytes from the channel to the input buffer
+						continue;
+					}
+				}
+			}
+
+			if (outBuf.remaining() == 0) { return len; }							// if there is no more space left on the output buffer, return the number of written bytes
+		}
+	}
+
+	public void close() throws IOException {
+		inner.close();
+	}
+
+	public boolean isOpen() {
+		return inner.isOpen();
+	}
+}
