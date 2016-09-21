@@ -1,0 +1,218 @@
+// Copyright (c) 2013-2014 Sandstorm Development Group, Inc. and contributors
+// Licensed under the MIT License:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+package org.capnproto;
+
+import java.io.IOException;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+
+public final class Serialize {
+
+	static ByteBuffer makeByteBuffer(int bytes) {
+		ByteBuffer result = ByteBuffer.allocate(bytes);		//creates a bytebuffer with space for as many bytes as given in the paramter
+		result.order(ByteOrder.LITTLE_ENDIAN);				// orders the buffer to little endian
+		result.mark();										// sets the position of the buffer to the first element ?
+		return result;
+	}
+
+    public static void fillBuffer(ByteBuffer buffer, ReadableByteChannel bc) throws IOException {
+        while(buffer.hasRemaining()) {					//checks if there is any remaining space in the buffer
+            int r = bc.read(buffer);					// reads the bytes from the channel into the buffer and returns the number of read elements
+            if (r < 0) {								//checks if the bytechannel exists ?
+                throw new IOException("premature EOF");
+            }
+            // TODO check for r == 0 ?.
+        }
+    }
+
+    public static MessageReader read(ReadableByteChannel bc) throws IOException {
+        return read(bc, ReaderOptions.DEFAULT_READER_OPTIONS);
+    }
+
+    public static MessageReader read(ReadableByteChannel bc, ReaderOptions options) throws IOException {
+        ByteBuffer firstWord = makeByteBuffer(Constants.BYTES_PER_WORD);	//create new buffer with max. 8 bytes
+        fillBuffer(firstWord, bc);											//fill the new created buffer with the first 8 bytes of the channel
+
+        int segmentCount = 1 + firstWord.getInt(0);							//gets the value of the first 4 bytes -> number of segments -1
+        																	// +1 to get the real number of segments
+        int segment0Size = 0;												// size of the first segment initiated
+/*?*/   if (segmentCount > 0) {												// if the message is not empty
+																			// if there are no segments in the message, the first 4 bytes value will be -1
+																			//    -> definition of the capn proto encoding: the first 4 bytes contain the number of segments -1
+            segment0Size = firstWord.getInt(4);								// get the size of the first segment from the second 4 bytes
+        }
+
+        int totalWords = segment0Size;							//set totalWords to the value of the first segment, which defines its size
+
+        if (segmentCount > 512) {								// number of segments limited to 512 
+            throw new IOException("too many segments");
+        }
+
+        // in words
+        ArrayList<Integer> moreSizes = new ArrayList<Integer>();				//an array with the size specifications of all segments except the first
+
+        if (segmentCount > 1) {													// if there is more than 1 segment in the message
+        	ByteBuffer moreSizesRaw = makeByteBuffer(4 * (segmentCount & ~1));	//	& ~1 turns the first bit of segmentCount to 0
+            																	// (means it creates a buffer with an even number of 4 byte blocks) 
+            																	// the sequenz of the message after the first 4 bytes specifies the sizes of each segment
+																				// there are 4 bytes for each size specification
+																				// so this buffer will contain the size specifications of the segments (except the first one)
+																				// if segmentCount is an uneven number, ~1 subtracts 1 
+																				//   -> the buffer is exactly as long as needed to specify the rest of the segment sizes
+																				// if segmentCount is an even number, ~1 does nothing
+																				//   -> the buffer is 4 bytes longer than needed
+            fillBuffer(moreSizesRaw, bc);										// fills new buffer with the size specifications from the second to the last segment
+            																	// this bytes specify the sizes of each segment
+            for (int ii = 0; ii < segmentCount - 1; ++ii) {			// maximum is segmentCount -1, because the size of segment 0 is already read
+                int size = moreSizesRaw.getInt(ii * 4);				//iterates through the new buffer and takes the values of every 4-byte-block 
+                													// sets the attribute size to the size of the current byte
+                moreSizes.add(size);								//adds these size of the current byte to the moreSizes List
+                totalWords += size;									//sums up the sizes of all segments
+            }
+        }
+
+        if (totalWords > options.traversalLimitInWords) {			//
+            throw new DecodeException("Message size exceeds traversal limit.");			//checks if the received message is in limit of bounds
+        }
+
+        ByteBuffer allSegments = makeByteBuffer(totalWords * Constants.BYTES_PER_WORD);		//creates a new buffer with as much space as the size of all 
+        																					//segments times 8 bytes per word
+        																					//-> buffer with as many words the total size of all segments
+        fillBuffer(allSegments, bc);							//fills new buffer with the segments content
+        														//where should be a lot of zeros
+        ByteBuffer[] segmentSlices = new ByteBuffer[segmentCount];			//creates new array for segment slices with as many entrys as segments in the message
+ 
+        allSegments.rewind();									// sets the position of the buffer to zero and the mark is dicarded
+        segmentSlices[0] = allSegments.slice();					//copies allSegments to the first element of the array
+        segmentSlices[0].limit(segment0Size * Constants.BYTES_PER_WORD);	//limits the size of the first arrayelement to as many words as the first segment is big
+        																	
+        segmentSlices[0].order(ByteOrder.LITTLE_ENDIAN);		//orders the bytes of the first segment in little endian
+
+        int offset = segment0Size;
+        for (int ii = 1; ii < segmentCount; ++ii) {
+            allSegments.position(offset * Constants.BYTES_PER_WORD); 	// jumps to the next segment
+            segmentSlices[ii] = allSegments.slice();
+            segmentSlices[ii].limit(moreSizes.get(ii - 1) * Constants.BYTES_PER_WORD);	//limits the size of this array-element to the size of the segment
+            segmentSlices[ii].order(ByteOrder.LITTLE_ENDIAN);
+            offset += moreSizes.get(ii - 1);
+        }																//puts every segment-content in the sementSlices array
+
+        return new MessageReader(segmentSlices, options);				//returns a MessageReader with an array of the sizes of each segment
+    }
+
+    public static MessageReader read(ByteBuffer bb) throws IOException {
+        return read(bb, ReaderOptions.DEFAULT_READER_OPTIONS);
+    }
+
+    /*
+     * Upon return, `bb.position()` will be at the end of the message.
+     */
+    public static MessageReader read(ByteBuffer bb, ReaderOptions options) throws IOException {
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+
+        int segmentCount = 1 + bb.getInt();			//gets the number of segments in the buffer
+        if (segmentCount > 512) {					//byte buffer is limited to 512 segments
+            throw new IOException("too many segments");
+        }
+
+        ByteBuffer[] segmentSlices = new ByteBuffer[segmentCount];		//creates na array with as many elements as segments in the buffer
+
+        int segmentSizesBase = bb.position();			//sets the base to the current position of the byte buffer (behind the first 4 bytes)
+        int segmentSizesSize = segmentCount * 4;		//the size of the segment-size-giving part of the message
+
+        int align = Constants.BYTES_PER_WORD - 1;		// align=7  -> 0111
+/*?*/   int segmentBase = (segmentSizesBase + segmentSizesSize + align) & ~align;	//should jump to the part where the content of the segments is given
+
+        int totalWords = 0;
+
+        for (int ii = 0; ii < segmentCount; ++ii) {						//smaller than segmentCount, because the index of the array starts at 0
+            int segmentSize = bb.getInt(segmentSizesBase + ii * 4);		// gets the size of the first segments content
+            
+            bb.position(segmentBase + totalWords * Constants.BYTES_PER_WORD);	//jumps to each segments content-base
+            segmentSlices[ii] = bb.slice();										
+            segmentSlices[ii].limit(segmentSize * Constants.BYTES_PER_WORD);
+            segmentSlices[ii].order(ByteOrder.LITTLE_ENDIAN);					//copies the content of each segment in the array and orders it little endian 
+
+            totalWords += segmentSize;									//sums up the size of the contents
+        }
+        bb.position(segmentBase + totalWords * Constants.BYTES_PER_WORD);		//sets the position of the buffer to the end of the segment-content-part
+
+        if (totalWords > options.traversalLimitInWords) {
+            throw new DecodeException("Message size exceeds traversal limit.");		//checks the size of the content
+        }
+
+        return new MessageReader(segmentSlices, options);				// returns a MessageReader with an array of the segments content
+    }
+
+    public static long computeSerializedSizeInWords(MessageBuilder message) {			//called in the compiler Test
+        final ByteBuffer[] segments = message.getSegmentsForOutput();
+
+        // From the capnproto documentation:
+        // "When transmitting over a stream, the following should be sent..."
+        long bytes = 0;
+        // "(4 bytes) The number of segments, minus one..."
+        bytes += 4;
+        // "(N * 4 bytes) The size of each segment, in words."
+        bytes += segments.length * 4;
+        // "(0 or 4 bytes) Padding up to the next word boundary."
+        if (bytes % 8 != 0) {
+            bytes += 4;
+        }
+
+        // The content of each segment, in order.
+        for (int i = 0; i < segments.length; ++i) {
+            final ByteBuffer s = segments[i];
+            bytes += s.limit();
+        }
+
+        return bytes / Constants.BYTES_PER_WORD;			//returns the size of the message in words
+    }
+
+    public static void write(WritableByteChannel outputChannel,
+                             MessageBuilder message) throws IOException {
+        ByteBuffer[] segments = message.getSegmentsForOutput();
+        int tableSize = (segments.length + 2) & (~1);
+
+        ByteBuffer table = ByteBuffer.allocate(4 * tableSize);
+        table.order(ByteOrder.LITTLE_ENDIAN);
+
+        table.putInt(0, segments.length - 1);			//puts the last 4 bytes of the segment-buffer in the first 4 bytes of the to be sent bytebuffer
+        												//the last element of the segments array should contain the number of segments
+        for (int i = 0; i < segments.length; ++i) {
+            table.putInt(4 * (i + 1), segments[i].limit() / 8);
+        }
+
+        // Any padding is already zeroed.
+        while (table.hasRemaining()) {
+            outputChannel.write(table);
+        }
+
+        for (ByteBuffer buffer : segments) {
+            while(buffer.hasRemaining()) {
+                outputChannel.write(buffer);
+            }
+        }
+    }
+}
