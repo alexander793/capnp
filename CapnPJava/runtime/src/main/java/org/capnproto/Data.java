@@ -96,7 +96,7 @@ public final class Data {
 
 		public byte[] toArray() {									// copies the data section of the buffer to an array
 			ByteBuffer dup = this.buffer.duplicate();
-			byte result[] = new byte[this.size];					// ->> should be byte[] result, or not ?
+			byte[] result = new byte[this.size];					// ->> should be byte[] result, or not ?
 			dup.position(this.offset);
 			dup.get(result, 0, this.size);							// copies content as big as this.size from this buffers position to the result array, with 0 array-offset
 			return result;
@@ -131,7 +131,7 @@ public final class Data {
 
 		public byte[] toArray() {
 			ByteBuffer dup = this.buffer.duplicate();
-			byte result[] = new byte[this.size];
+			byte[] result = new byte[this.size];
 			dup.position(this.offset);
 			dup.get(result, 0, this.size);
 			return result;
