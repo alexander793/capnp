@@ -42,12 +42,13 @@ public final class PackedOutputStream implements WritableByteChannel {
 
 		int inPtr = inBuf.position();											// gets the number of the next byte to be written
 		int inEnd = inPtr + length;												// gets the number of the last byte to be written
+		
 		while (inPtr < inEnd) {													// while there are still some bytes remaining in the input buffer
+			
 			if (out.remaining() < 10) {											// if there are less than 10 bytes left in the output buffer
 				//# Oops, we're out of space. We need at least 10
 				//# bytes for the fast path, since we don't
 				//# bounds-check on every byte.
-
 				if (out == slowBuffer) {
 					int oldLimit = out.limit();
 					out.limit(out.position());
@@ -62,59 +63,22 @@ public final class PackedOutputStream implements WritableByteChannel {
 
 			int tagPos = out.position();										// sets the position of the tag word used in packed format
 			out.position(tagPos + 1);											// sets the position of the output buffer behind the tag word
-
-			byte curByte;
-
-			curByte = inBuf.get(inPtr);											// sets the current, to be packed byte, to the first byte of the input buffer
-			byte bit0 = (curByte != 0) ? (byte) 1 : (byte) 0;					// sets the first bit of the tag zero or one, depending on if the current input byte is zero or not
-			out.put(curByte);													// writes the current byte of the input buffer to the output
-			out.position(out.position() + bit0 - 1);							// if the written byte was a zero, then the position of the output buffer is decremented 
-			inPtr += 1;															// increments the imaginal pointer of the input buffer 
-
-			curByte = inBuf.get(inPtr);											// 
-			byte bit1 = (curByte != 0) ? (byte) 1 : (byte) 0;					// checks, if the next byte of the input buffer is zero or not
-			out.put(curByte);
-			out.position(out.position() + bit1 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit2 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit2 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit3 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit3 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit4 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit4 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit5 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit5 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit6 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit6 - 1);
-			inPtr += 1;
-
-			curByte = inBuf.get(inPtr);
-			byte bit7 = (curByte != 0) ? (byte) 1 : (byte) 0;
-			out.put(curByte);
-			out.position(out.position() + bit7 - 1);
-			inPtr += 1;
-
-			byte tag = (byte) ((bit0 << 0) | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) | (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7));			// creates the tag from the calculated bits
-
+			
+			byte tag = 0;							// the final tag
+			byte signalBit = 0;						// a bit of the tag
+			byte curByte;							// the current, to be zero-checked byte
+			
+			for (int ii = 0; ii < Constants.BITS_PER_BYTE; ++ii){			// iterates through the next 8 bytes
+				curByte = inBuf.get(inPtr);			// reads the next byte from the input buffer
+				signalBit = 0;						// resets the signal bit for the current byte to zero
+				if (curByte != 0){					// if this byte is nonzero
+					signalBit = 1;					// sets the signalBit to 1, because this current byte is non zero
+					out.put(curByte);				// writes the current byte to the output buffer
+				}
+				inPtr++;							// increments the input pointer to jump to the next byte 
+				tag = (tag | (signalBit << ii))		// updates the tag with the shifted signalBit
+			}
+			
 			out.put(tagPos, tag); 																				//puts the tag at the reserved position
 
 			if (tag == 0) {																						// if the tag is the special 0x00 tag
@@ -123,13 +87,15 @@ public final class PackedOutputStream implements WritableByteChannel {
 				//# one).
 				int runStart = inPtr;
 				int limit = inEnd;
-				if (limit - inPtr > 255 * Constants.BYTES_PER_WORD) {																	// if there are more than 8 bytes to write in the input buffer, 
-					limit = inPtr + 255 * Constants.BYTES_PER_WORD;																	// the write limit is set to 8 byte; because of the special packed encoding, a maximum of 8 zero words can follow the zero tag
+				if (limit - inPtr > 255 * Constants.BYTES_PER_WORD) {											// if there are more than 8 bytes to write in the input buffer, 
+					limit = inPtr + 255 * Constants.BYTES_PER_WORD;												// the write limit is set to 8 byte; because of the special packed encoding, a maximum of 8 zero words can follow the zero tag
 				}
+				
 				while (inPtr < limit && inBuf.getLong(inPtr) == 0) {											// jumps over the next zero words, with a maximum of 8 zero words
 					inPtr += Constants.BYTES_PER_WORD;
 				}
-				out.put((byte) ((inPtr - runStart) / Constants.BYTES_PER_WORD));														// calculates the number of zero words, that were jumped over and puts it behind the zero tag 
+				
+				out.put((byte) ((inPtr - runStart) / Constants.BYTES_PER_WORD));								// calculates the number of zero words, that were jumped over and puts it behind the zero tag 
 
 			} else if (tag == (byte) 0xff) {																	// if the tag is the special 0x00 tag
 				//# An all-nonzero word is followed by a count of
@@ -143,15 +109,15 @@ public final class PackedOutputStream implements WritableByteChannel {
 
 				int runStart = inPtr;
 				int limit = inEnd;
-				if (limit - inPtr > 255 * Constants.BYTES_PER_WORD) {																	// if the number of to be written bytes of the input is bigger than 8 bytes 
-					limit = inPtr + 255 * Constants.BYTES_PER_WORD;																	// the limit is set to 8 bytes, which could be copied directly to the output
+				if (limit - inPtr > 255 * Constants.BYTES_PER_WORD) {											// if the number of to be written bytes of the input is bigger than 8 bytes 
+					limit = inPtr + 255 * Constants.BYTES_PER_WORD;												// the limit is set to 8 bytes, which could be copied directly to the output
 				}
 
 				while (inPtr < limit) {																			// iterates through the words from the beginning of the buffer to its limit
 					byte c = 0;
 					for (int ii = 0; ii < Constants.BYTES_PER_WORD; ++ii) {										// iterates through the word and checks, if there are at least 2 zero bytes					
 						c += (inBuf.get(inPtr) == 0 ? 1 : 0);
-						inPtr += 1;
+						inPtr++;
 					}
 					if (c >= 2) {																				// if there are at least two zero bytes in this word, we leave the loop and compress these two
 						//# Un-read the word with multiple zeros, since
@@ -176,29 +142,29 @@ public final class PackedOutputStream implements WritableByteChannel {
 					//# decide what to do.
 
 					if (out == slowBuffer) {																	// no idea
-						int oldLimit = out.limit();
+						int oldLimit = out.limit();																// save the current limit of the buffer
 						out.limit(out.position());
 						out.rewind();
-						this.inner.write(out);
-						out.limit(oldLimit);
+						this.inner.write(out);																	// writes the bytes that are allready in the buffer to the output stream
+						out.limit(oldLimit);																	// after that, we set the limit of the buffer back to the old one
 					}
 
-					inBuf.position(runStart);																	// writes the uncompressed words directly to the output stream
+					inBuf.position(runStart);																	// because there is no more space left in the ouput buffer
 					ByteBuffer slice = inBuf.slice();
 					slice.limit(count);
 					while (slice.hasRemaining()) {
-						this.inner.write(slice);
+						this.inner.write(slice);																// we write the uncompressed words directly to the output stream
 					}
 
-					out = this.inner.getWriteBuffer();															// fills the output buffer with new bytes
+					out = this.inner.getWriteBuffer();															// and fill the output buffer with new bytes
 				}
 			}
 		}
 
 		if (out == slowBuffer) {																				// no idea
 			out.limit(out.position());
-			out.rewind();
-			this.inner.write(out);
+			out.rewind();																						// if there are finaly no more btes left on the input stream 
+			this.inner.write(out);																				// write the rest of the buffered bytes to the output stream
 		}
 
 		inBuf.position(inPtr);																					// sets the position of the input buffer to the next to be written byte

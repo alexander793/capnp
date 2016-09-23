@@ -70,7 +70,7 @@ public class StructReader {
 	}
 
 	protected final byte _getByteField(int offset) {
-		if ((offset + 1) * Constants.BITS_PER_BYTE <= this.dataSize) {
+		if ((offset + 1) * Constants.BITS_PER_BYTE <= this.dataSize) {				// checks if the end of the wanted byte would still be in the datasize boundaries. If not, this method will return zero
 			return this.segment.buffer.get(this.data + offset);
 		} else {
 			return 0;
@@ -82,8 +82,8 @@ public class StructReader {
 	}
 
 	protected final short _getShortField(int offset) {
-		if ((offset + 1) * 16 <= this.dataSize) {
-			return this.segment.buffer.getShort(this.data + offset * 2);
+		if ((offset + 1) * 16 <= this.dataSize) {							// 16 Bit in a short value
+			return this.segment.buffer.getShort(this.data + offset * 2);	// this would assume, thatthe whole buffer only contains short values
 		} else {
 			return 0;
 		}
@@ -94,7 +94,7 @@ public class StructReader {
 	}
 
 	protected final int _getIntField(int offset) {
-		if ((offset + 1) * 32 <= this.dataSize) {
+		if ((offset + 1) * 32 <= this.dataSize) {							//32 Bit in an int value
 			return this.segment.buffer.getInt(this.data + offset * 4);
 		} else {
 			return 0;
@@ -106,7 +106,7 @@ public class StructReader {
 	}
 
 	protected final long _getLongField(int offset) {
-		if ((offset + 1) * 64 <= this.dataSize) {
+		if ((offset + 1) * 64 <= this.dataSize) {							// 64 Bit in a long value
 			return this.segment.buffer.getLong(this.data + offset * 8);
 		} else {
 			return 0;
@@ -118,7 +118,7 @@ public class StructReader {
 	}
 
 	protected final float _getFloatField(int offset) {
-		if ((offset + 1) * 32 <= this.dataSize) {
+		if ((offset + 1) * 32 <= this.dataSize) {							// 32 Bit in a float value
 			return this.segment.buffer.getFloat(this.data + offset * 4);
 		} else {
 			return 0;
@@ -134,7 +134,7 @@ public class StructReader {
 	}
 
 	protected final double _getDoubleField(int offset) {
-		if ((offset + 1) * 64 <= this.dataSize) {
+		if ((offset + 1) * 64 <= this.dataSize) {							// 64 Bit in a double value
 			return this.segment.buffer.getDouble(this.data + offset * 8);
 		} else {
 			return 0;
