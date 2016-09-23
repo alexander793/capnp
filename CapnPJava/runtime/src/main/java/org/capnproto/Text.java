@@ -73,7 +73,7 @@ public final class Text {
 
 		public Reader(ByteBuffer buffer, int offset, int size) {
 			this.buffer = buffer;
-			this.offset = offset * 8;
+			this.offset = offset * Constants.BYTES_PER_WORD;
 			this.size = size;
 		}
 

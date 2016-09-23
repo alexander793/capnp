@@ -27,16 +27,16 @@ import java.nio.ByteBuffer;
 final class WireHelpers {
 
 	static int roundBytesUpToWords(int bytes) {
-		return (bytes + 7) / 8;						// round up to multiple of 8.E.g: bytes = 11(->1word & 3 bytes) then bytes + 7 = 18. 18/8 = 2 -> single 3 bytes stuffed in the 2. word
+		return (bytes + (Constants.BYTES_PER_WORD-1)) / Constants.BYTES_PER_WORD;						// round up to multiple of 8.E.g: bytes = 11(->1word & 3 bytes) then bytes + 7 = 18. 18/8 = 2 -> single 3 bytes stuffed in the 2. word
 	}
 
 	static int roundBitsUpToBytes(int bits) {				// rounds the given number of bits up to byte boundaries 
-		return (bits + 7) / Constants.BITS_PER_BYTE;
+		return (bits + (Constants.BITS_PER_BYTE -1)) / Constants.BITS_PER_BYTE;
 	}
 
 	static int roundBitsUpToWords(long bits) {				// rounds number of bits up to word boundaries
 		//# This code assumes 64-bit words.
-		return (int) ((bits + 63) / ((long) Constants.BITS_PER_WORD));
+		return (int) ((bits + (Constants.BITS_PER_WORD-1)) / ((long) Constants.BITS_PER_WORD));
 	}
 
 	static class AllocateResult {							// the result of an allocation
@@ -207,12 +207,12 @@ final class WireHelpers {
 						if (otherSegment.isWritable()) {
 							zeroObject(otherSegment, padOffset + 1, FarPointer.positionInSegment(pad));
 						}
-						segment.buffer.putLong(padOffset * 8, 0L);
-						segment.buffer.putLong((padOffset + 1) * 8, 0L);
+						segment.buffer.putLong(padOffset * Constants.BYTES_PER_WORD, 0L);
+						segment.buffer.putLong((padOffset + 1) * Constants.BYTES_PER_WORD, 0L);
 
 					} else {
 						zeroObject(segment, padOffset);
-						segment.buffer.putLong(padOffset * 8, 0L);
+						segment.buffer.putLong(padOffset * Constants.BYTES_PER_WORD, 0L);
 					}
 				}
 
@@ -394,7 +394,7 @@ final class WireHelpers {
 		AllocateResult allocation = allocate(refOffset, segment, size.total(), WirePointer.STRUCT);
 		StructPointer.setFromStructSize(allocation.segment.buffer, allocation.refOffset, size);
 		return factory.constructBuilder(allocation.segment, allocation.ptr * Constants.BYTES_PER_WORD,
-				allocation.ptr + size.data, size.data * 64, size.pointers);
+				allocation.ptr + size.data, size.data * Constants.BITS_PER_POINTER, size.pointers);
 	}
 
 	static <T> T getWritableStructPointer(StructBuilder.Factory<T> factory, int refOffset, SegmentBuilder segment,
@@ -728,7 +728,7 @@ final class WireHelpers {
 				Text.Builder builder = initTextPointer(refOffset, segment, defaultSize);
 				// TODO is there a way to do this with bulk methods?
 				for (int i = 0; i < builder.size; ++i) {
-					builder.buffer.put(builder.offset + i, defaultBuffer.get(defaultOffset * 8 + i));
+					builder.buffer.put(builder.offset + i, defaultBuffer.get(defaultOffset * Constants.BYTES_PER_WORD + i));
 				}
 				return builder;
 			}
@@ -781,7 +781,7 @@ final class WireHelpers {
 				Data.Builder builder = initDataPointer(refOffset, segment, defaultSize);
 				// TODO is there a way to do this with bulk methods?
 				for (int i = 0; i < builder.size; ++i) {
-					builder.buffer.put(builder.offset + i, defaultBuffer.get(defaultOffset * 8 + i));
+					builder.buffer.put(builder.offset + i, defaultBuffer.get(defaultOffset * Constants.BYTES_PER_WORD + i));
 				}
 				return builder;
 			}
@@ -953,7 +953,7 @@ final class WireHelpers {
 		long srcRef = srcSegment.get(srcOffset);
 
 		if (WirePointer.isNull(srcRef)) {
-			dstSegment.buffer.putLong(dstOffset * 8, 0L);
+			dstSegment.buffer.putLong(dstOffset * Constants.BYTES_PER_WORD, 0L);
 			return dstSegment;
 		}
 

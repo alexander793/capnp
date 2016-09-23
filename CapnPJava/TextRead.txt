@@ -1,7 +1,4 @@
-Alice: alice@example.com
-  mobile phone: 555-1212
-  student at: MIT
-Bob: bob@example.com
-  home phone: 555-4567
-  work phone: 555-7654
-  unemployed
+Hodor: mail
+  mobile phone: 44545
+  work phone: 5555
+  employer: R&S

@@ -57,9 +57,9 @@ public class StructReader {
 	protected final boolean _getBooleanField(int offset) {
 		// XXX should use unsigned operations
 		if (offset < this.dataSize) {
-			byte b = this.segment.buffer.get(this.data + offset / 8);
+			byte b = this.segment.buffer.get(this.data + offset / Constants.BYTES_PER_WORD);
 
-			return (b & (1 << (offset % 8))) != 0;
+			return (b & (1 << (offset % Constants.BITS_PER_BYTE))) != 0;
 		} else {
 			return false;
 		}
@@ -70,7 +70,7 @@ public class StructReader {
 	}
 
 	protected final byte _getByteField(int offset) {
-		if ((offset + 1) * 8 <= this.dataSize) {
+		if ((offset + 1) * Constants.BITS_PER_BYTE <= this.dataSize) {
 			return this.segment.buffer.get(this.data + offset);
 		} else {
 			return 0;

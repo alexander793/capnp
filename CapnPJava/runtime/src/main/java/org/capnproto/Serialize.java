@@ -63,7 +63,7 @@ public final class Serialize {
 		if (segmentCount > 0) {												// if the message is not empty
 								// if there are no segments in the message, the first 4 bytes value will be -1
 								//    -> definition of the capn proto encoding: the first 4 bytes contain the number of segments -1
-			segment0Size = firstWord.getInt(4);								// get the size of the first segment from the second 4 bytes
+			segment0Size = firstWord.getInt(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION);								// get the size of the first segment from the second 4 bytes
 		}
 
 		int totalWords = segment0Size;							//set totalWords to the value of the first segment, which defines its size
@@ -76,7 +76,7 @@ public final class Serialize {
 		ArrayList<Integer> moreSizes = new ArrayList<Integer>();				//an array with the size specifications of all segments except the first
 
 		if (segmentCount > 1) {													// if there is more than 1 segment in the message
-			ByteBuffer moreSizesRaw = makeByteBuffer(4 * (segmentCount & ~1));	//	& ~1 turns the first bit of segmentCount to 0
+			ByteBuffer moreSizesRaw = makeByteBuffer(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION * (segmentCount & ~1));	//	& ~1 turns the first bit of segmentCount to 0
 																				// (means it creates a buffer with an even number of 4 byte blocks) 
 																				// the sequenz of the message after the first 4 bytes specifies the sizes of each segment
 																				// there are 4 bytes for each size specification
@@ -88,7 +88,7 @@ public final class Serialize {
 			fillBuffer(moreSizesRaw, bc);										// fills new buffer with the size specifications from the second to the last segment
 											// this bytes specify the sizes of each segment
 			for (int ii = 0; ii < segmentCount - 1; ++ii) {			// maximum is segmentCount -1, because the size of segment 0 is already read
-				int size = moreSizesRaw.getInt(ii * 4);				//iterates through the new buffer and takes the values of every 4-byte-block 
+				int size = moreSizesRaw.getInt(ii * Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION);				//iterates through the new buffer and takes the values of every 4-byte-block 
 														// sets the attribute size to the size of the current byte
 				moreSizes.add(size);								//adds these size of the current byte to the moreSizes List
 				totalWords += size;									//sums up the sizes of all segments
@@ -142,7 +142,7 @@ public final class Serialize {
 		ByteBuffer[] segmentSlices = new ByteBuffer[segmentCount];		//creates na array with as many elements as segments in the buffer
 
 		int segmentSizesBase = bb.position();			//sets the base to the current position of the byte buffer (behind the first 4 bytes)
-		int segmentSizesSize = segmentCount * 4;		//the size of the segment-size-giving part of the message
+		int segmentSizesSize = segmentCount * Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION;		//the size of the segment-size-giving part of the message
 
 		int align = Constants.BYTES_PER_WORD - 1;		// align=7  -> 0111
 		/* ? */
@@ -151,7 +151,7 @@ public final class Serialize {
 		int totalWords = 0;
 
 		for (int ii = 0; ii < segmentCount; ++ii) {						//smaller than segmentCount, because the index of the array starts at 0
-			int segmentSize = bb.getInt(segmentSizesBase + ii * 4);		// gets the size of the first segments content
+			int segmentSize = bb.getInt(segmentSizesBase + ii * Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION);		// gets the size of the first segments content
 
 			bb.position(segmentBase + totalWords * Constants.BYTES_PER_WORD);	//jumps to each segments content-base
 			segmentSlices[ii] = bb.slice();
@@ -177,7 +177,7 @@ public final class Serialize {
 		// "(4 bytes) The number of segments, minus one..."
 		bytes += 4;
 		// "(N * 4 bytes) The size of each segment, in words."
-		bytes += segments.length * 4;
+		bytes += segments.length * Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION;
 		// "(0 or 4 bytes) Padding up to the next word boundary."
 		if (bytes % 8 != 0) {
 			bytes += 4;
@@ -202,7 +202,7 @@ public final class Serialize {
 		table.putInt(0, segments.length - 1);			//puts the last 4 bytes of the segment-buffer in the first 4 bytes of the to be sent bytebuffer
 												//the last element of the segments array should contain the number of segments
 		for (int i = 0; i < segments.length; ++i) {
-			table.putInt(4 * (i + 1), segments[i].limit() / 8);
+			table.putInt(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION * (i + 1), segments[i].limit() / Constants.BYTES_PER_WORD);
 		}
 
 		// Any padding is already zeroed.

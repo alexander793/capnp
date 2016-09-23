@@ -48,7 +48,7 @@ final class WirePointer {
 	}
 
 	public static void setKindAndTarget(ByteBuffer buffer, int offset, byte kind, int targetOffset) {
-		buffer.putInt(offset * 8, (((targetOffset - offset) - 1) << 2) | kind);
+		buffer.putInt(offset * Constants.BYTES_PER_WORD, (((targetOffset - offset) - 1) << 2) | kind);
 	}
 
 	public static void setKindWithZeroOffset(ByteBuffer buffer, int offset, byte kind) {
@@ -65,11 +65,11 @@ final class WirePointer {
 		//# allocated immediately before this pointer, to distinguish
 		//# it from null.
 
-		buffer.putInt(offset * 8, 0xfffffffc);
+		buffer.putInt(offset * Constants.BYTES_PER_WORD, 0xfffffffc);
 	}
 
 	public static void setOffsetAndKind(ByteBuffer buffer, int offset, int offsetAndKind) {		//writes the offset and kind of the FarPointer to the bytebuffer at the given offset
-		buffer.putInt(offset * 8, offsetAndKind);
+		buffer.putInt(offset * Constants.BYTES_PER_WORD, offsetAndKind);
 	}
 
 	public static int inlineCompositeListElementCount(long wirePointer) {
@@ -77,7 +77,7 @@ final class WirePointer {
 	}
 
 	public static void setKindAndInlineCompositeListElementCount(ByteBuffer buffer, int offset, byte kind, int elementCount) {
-		buffer.putInt(offset * 8, (elementCount << 2) | kind);
+		buffer.putInt(offset * Constants.BYTES_PER_WORD, (elementCount << 2) | kind);
 	}
 
 	public static int upper32Bits(long wirePointer) {										// long types have 64 Bits. the >>> operator shifts the binary code of the long value 32 positions to the right.

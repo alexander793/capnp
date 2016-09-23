@@ -40,12 +40,12 @@ final class StructPointer {
 	}
 
 	public static void setFromStructSize(ByteBuffer buffer, int offset, StructSize size) {
-		buffer.putShort(8 * offset + 4, size.data);
-		buffer.putShort(8 * offset + 6, size.pointers);
+		buffer.putShort(Constants.BYTES_PER_WORD * offset + 4, size.data);
+		buffer.putShort(Constants.BYTES_PER_WORD * offset + 6, size.pointers);
 	}
 
 	public static void set(ByteBuffer buffer, int offset, short dataSize, short pointerCount) {			//probably set the data size block and the pointer count of the struct pointer; but no idea, why it calculates the offset so strangely
-		buffer.putShort(8 * offset + 4, dataSize);
-		buffer.putShort(8 * offset + 6, pointerCount);
+		buffer.putShort(Constants.BYTES_PER_WORD * offset + 4, dataSize);
+		buffer.putShort(Constants.BYTES_PER_WORD * offset + 6, pointerCount);
 	}
 }
