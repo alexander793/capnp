@@ -21,131 +21,137 @@
 
 package org.capnproto.examples;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.FileDescriptor;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import org.capnproto.StructList;
 import org.capnproto.examples.Addressbook.AddressBook;
 import org.capnproto.examples.Addressbook.Person;
 
+
 public class AddressbookMain {
 
-    public static void writeAddressBook() throws java.io.IOException {
-        org.capnproto.MessageBuilder message = new org.capnproto.MessageBuilder();
-        AddressBook.Builder addressbook = message.initRoot(AddressBook.factory);
-        StructList.Builder<Person.Builder> people = addressbook.initPeople(2);
+	public static void writeAddressBook() throws java.io.IOException {
+		org.capnproto.MessageBuilder message = new org.capnproto.MessageBuilder();
+		AddressBook.Builder addressbook = message.initRoot(AddressBook.factory);
+		StructList.Builder<Person.Builder> people = addressbook.initPeople(2);
 
-        Person.Builder alice = people.get(0);
-        alice.setId(123);
-        alice.setName("Alice");
-        alice.setEmail("alice@example.com");
+		Person.Builder alice = people.get(0);
+		alice.setId(123);
+		alice.setName("Alice");
+		alice.setEmail("alice@example.com");
 
-        StructList.Builder<Person.PhoneNumber.Builder> alicePhones = alice.initPhones(1);
-        alicePhones.get(0).setNumber("555-1212");
-        alicePhones.get(0).setType(Person.PhoneNumber.Type.MOBILE);
-        alice.getEmployment().setSchool("MIT");
+		StructList.Builder<Person.PhoneNumber.Builder> alicePhones = alice.initPhones(1);
+		alicePhones.get(0).setNumber("555-1212");
+		alicePhones.get(0).setType(Person.PhoneNumber.Type.MOBILE);
+		alice.getEmployment().setSchool("MIT");
 
-        Person.Builder bob = people.get(1);
-        bob.setId(456);
-        bob.setName("Bob");
-        bob.setEmail("bob@example.com");
-        StructList.Builder<Person.PhoneNumber.Builder> bobPhones = bob.initPhones(2);
-        bobPhones.get(0).setNumber("555-4567");
-        bobPhones.get(0).setType(Person.PhoneNumber.Type.HOME);
-        bobPhones.get(1).setNumber("555-7654");
-        bobPhones.get(1).setType(Person.PhoneNumber.Type.WORK);
-        bob.getEmployment().setUnemployed(org.capnproto.Void.VOID);
-        
-        //Aus Textdatei lesen
-	/*	BufferedReader in = new BufferedReader(new FileReader("TextAuslesen.txt"));	
-		String line;
-		while((line = in.readLine()) != null)
-		{
-		    System.out.println(line);
+		Person.Builder bob = people.get(1);
+		bob.setId(456);
+		bob.setName("Bob");
+		bob.setEmail("bob@example.com");
+		StructList.Builder<Person.PhoneNumber.Builder> bobPhones = bob.initPhones(2);
+		bobPhones.get(0).setNumber("555-4567");
+		bobPhones.get(0).setType(Person.PhoneNumber.Type.HOME);
+		bobPhones.get(1).setNumber("555-7654");
+		bobPhones.get(1).setType(Person.PhoneNumber.Type.WORK);
+		bob.getEmployment().setUnemployed(org.capnproto.Void.VOID);
+
+		//Aus Textdatei lesen
+		/*
+		 * BufferedReader in = new BufferedReader(new FileReader("TextAuslesen.txt"));
+		 * String line;
+		 * while((line = in.readLine()) != null)
+		 * {
+		 * System.out.println(line);
+		 * }
+		 * in.close();
+		 */
+		FileOutputStream ops = new FileOutputStream(FileDescriptor.out);
+		org.capnproto.SerializePacked.writeToUnbuffered(ops.getChannel(), message);
+		ops.close();
+	}
+
+	public static void printAddressBook() throws java.io.IOException {
+		FileInputStream fis = new FileInputStream(FileDescriptor.in);
+		org.capnproto.MessageReader message = org.capnproto.SerializePacked.readFromUnbuffered(fis.getChannel());
+		AddressBook.Reader addressbook = message.getRoot(AddressBook.factory);
+		BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("TextRead.txt", false)));		// gelesenes in Textdatei schreiben
+		String stringOutput;																								// OutputString, der auf Kommandozeile und in Datei geschrieben wird
+		for (Person.Reader person : addressbook.getPeople()) {
+			stringOutput = person.getName() + ": " + person.getEmail();
+			System.out.println(stringOutput);
+			fw.write(stringOutput);
+			fw.append(System.getProperty("line.separator"));
+
+			for (Person.PhoneNumber.Reader phone : person.getPhones()) {
+				String typeName = "UNKNOWN";
+				switch (phone.getType()) {
+					case MOBILE:
+						typeName = "mobile";
+						break;
+					case HOME:
+						typeName = "home";
+						break;
+					case WORK:
+						typeName = "work";
+						break;
+					case _NOT_IN_SCHEMA:
+						typeName = "other";
+						break;
+				}
+				stringOutput = "  " + typeName + " phone: " + phone.getNumber();
+				System.out.println(stringOutput);
+				fw.write(stringOutput);
+				fw.append(System.getProperty("line.separator"));
+			}
+
+			Person.Employment.Reader employment = person.getEmployment();				// creates a new Builder for the employment struct
+			switch (employment.which()) {												// calls the which-function of the builder
+				case UNEMPLOYED:
+					stringOutput = "  unemployed";
+					break;
+				case EMPLOYER:
+					stringOutput = "  employer: " + employment.getEmployer();
+					break;
+				case SCHOOL:
+					stringOutput = "  student at: " + employment.getSchool();
+					break;
+				case SELF_EMPLOYED:
+					stringOutput = "  self-employed";
+					break;
+				default:
+					break;
+			}
+			System.out.println(stringOutput);
+			fw.write(stringOutput);
+			fw.append(System.getProperty("line.separator"));
 		}
-		in.close();   */
+		fw.close();			//FileWriterVerbindung schließen
+		fis.close();
+	}
 
-        org.capnproto.SerializePacked.writeToUnbuffered(
-          (new FileOutputStream(FileDescriptor.out)).getChannel(), message);  
-    }
+	public static void usage() {
+		System.out.println("usage: addressbook [write | read]");
+	}
 
-    public static void printAddressBook() throws java.io.IOException {
-        org.capnproto.MessageReader message =
-            org.capnproto.SerializePacked.readFromUnbuffered(
-                (new FileInputStream(FileDescriptor.in)).getChannel());
-        AddressBook.Reader addressbook = message.getRoot(AddressBook.factory);
-        BufferedWriter fw = new BufferedWriter(new OutputStreamWriter( new FileOutputStream("TextRead.txt", false)));		// gelesenes in Textdatei schreiben
-        String stringOutput;																								// OutputString, der auf Kommandozeile und in Datei geschrieben wird
-        for(Person.Reader person : addressbook.getPeople()) {
-        	stringOutput = person.getName() + ": " + person.getEmail();
-            System.out.println(stringOutput);
-        	fw.write(stringOutput);
-        	fw.append(System.getProperty("line.separator"));
-
-            for (Person.PhoneNumber.Reader phone : person.getPhones()) {
-                String typeName = "UNKNOWN";
-                switch (phone.getType()) {
-                case MOBILE :
-                    typeName = "mobile"; break;
-                case HOME :
-                    typeName = "home"; break;
-                case WORK :
-                    typeName = "work"; break;
-                }
-                stringOutput="  " + typeName + " phone: " + phone.getNumber();
-                System.out.println(stringOutput);
-                fw.write(stringOutput);
-                fw.append(System.getProperty("line.separator"));
-            }
-
-            Person.Employment.Reader employment = person.getEmployment();				// creates a new Builder for the employment struct
-            switch (employment.which()) {												// calls the which-function of the builder
-            case UNEMPLOYED :
-            	stringOutput="  unemployed";
-                break;
-            case EMPLOYER :
-            	stringOutput="  employer: " + employment.getEmployer();
-                break;
-            case SCHOOL :
-            	stringOutput="  student at: " + employment.getSchool();
-                break;
-            case SELF_EMPLOYED:
-            	stringOutput="  self-employed";
-                break;
-            default :
-                break;
-            }
-            System.out.println(stringOutput);
-            fw.write(stringOutput);
-            fw.append(System.getProperty("line.separator"));
-        }
-        fw.close();																	//FileWriterVerbindung schließen
-    }
-
-    public static void usage() {
-        System.out.println("usage: addressbook [write | read]");
-    }
-
-    public static void main(String[] args) {
-        try {
-            if (args.length < 1) {
-                usage();
-            } else if (args[0].equals("write")) {
-                writeAddressBook();
-            } else if (args[0].equals("read")) {
-                printAddressBook();
-            } else {
-                usage();
-            }
-        } catch (java.io.IOException e) {
-            System.out.println("io exception: "  + e);
-        }
-    }
+	public static void main(String[] args) {
+		try {
+			if (args.length < 1) {
+				usage();
+			} else if (args[0].equals("write")) {
+				writeAddressBook();
+			} else if (args[0].equals("read")) {
+				printAddressBook();
+			} else {
+				usage();
+			}
+		}
+		catch (java.io.IOException e) {
+			System.out.println("io exception: " + e);
+		}
+	}
 }

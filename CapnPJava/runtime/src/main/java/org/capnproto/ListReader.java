@@ -95,10 +95,11 @@ public class ListReader {
 
 	protected <T> T _getStructElement(StructReader.Factory<T> factory, int index) {												//creates a new Reader for a struct object
 		// TODO check nesting limit
-		int structData = this.ptr + (int) ((long) index * this.step; / Constants.BITS_PER_BYTE);					// beginning of the DataSection of the struct
+		int structData = this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE);					// beginning of the DataSection of the struct
 		int structPointers = (structData + (this.structDataSize / Constants.BITS_PER_BYTE)) / Constants.BYTES_PER_WORD;		// beginning of the PointerSection of the struct
 
-		return factory.constructReader(this.segment, structData, structPointers, this.structDataSize, this.structPointerCount, this.nestingLimit - 1);
+		return factory.constructReader(this.segment, structData, structPointers, this.structDataSize, this.structPointerCount,
+				this.nestingLimit - 1);
 	}
 
 	protected <T> T _getPointerElement(FromPointerReader<T> factory, int index) {												//creates a new Reader for a pointer Object
