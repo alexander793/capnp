@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 
 final class StructPointer {
 
-	public static short dataSize(long ref) {						// gets the size of the data section of the strcut pointer
+	public static short dataSize(long ref) {						// gets the size of the data section of the struct pointer
 		// in words.
 		return (short) (WirePointer.upper32Bits(ref) & 0xffff);
 	}

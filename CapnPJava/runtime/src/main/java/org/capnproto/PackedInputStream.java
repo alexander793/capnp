@@ -81,18 +81,18 @@ public final class PackedInputStream implements ReadableByteChannel {
 
 				tag = inBuf.get();					// reads the next byte as a Tag-byte(see description of Capnp)			
 				for (int n = 0; n < Constants.BITS_PER_BYTE; ++n) {		// iterates through the Byte and checks which Bit is set
-					boolean isNonzero = (tag & (1 << n)) != 0;						// shifts the 1 through an 8Bit blob and checks, if that specific bit in the tag is set or not
-					outBuf.put((byte) (inBuf.get() & (isNonzero ? -1 : 0)));		// if the bit is set, then it writes the next byte from the input stream to the output buffer, If not it writes a zero byte
-					inBuf.position(inBuf.position() + (isNonzero ? 0 : -1));		// updates the position of the input buffer; if the bit was set, the position stays on the current element
-					// if the Bit was 0, the position is set back to the previous position
+					if ((tag & (1 << n)) != 0) {// shifts the 1 through an 8Bit blob and checks, if that specific bit in the tag is set or not
+						outBuf.put(inBuf.get());// if the bit is set, then it writes the next byte from the input stream to the output buffer
+					} else {
+						outBuf.put((byte) 0);// If not it writes a zero byte
+					}
 				}
 			}
 
 			if (tag == 0) {														 	// checks, if the read tag is the special zero-tag
 				if (inBuf.remaining() == 0) { throw new Error("Should always have non-empty buffer here."); }					// at this point, the input must always contain more information, because of the capnp packing-description
 
-				int runLength = (0xff & (int) inBuf.get()) * Constants.BYTES_PER_WORD;		// checks, how many zero-words will follow the 00-tag, from the byte following the tag
-
+				int runLength = inBuf.get() * Constants.BYTES_PER_WORD;		// checks, how many zero-words will follow the 00-tag, from the byte following the tag
 				if (runLength > outEnd - outPtr) { throw new Error("Packed input did not end cleanly on a segment boundary"); }	// if there are more zero-words to be written than there is space in the output buffer
 
 				for (int i = 0; i < runLength; ++i) {								// writes the given number of zero-words to the output buffer
@@ -100,7 +100,7 @@ public final class PackedInputStream implements ReadableByteChannel {
 				}
 			} else if (tag == (byte) 0xff) {										// checks, if the read tag is the special ff-tag
 
-				int runLength = (0xff & (int) inBuf.get()) * Constants.BYTES_PER_WORD;						// checks how many words, following this tag should be interpreted as unpacked
+				int runLength = inBuf.get() * Constants.BYTES_PER_WORD;						// checks how many words, following this tag should be interpreted as unpacked
 
 				if (inBuf.remaining() >= runLength) {								// if there are more words to be written, than the unpacked ones
 					//# Fast path.
