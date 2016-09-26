@@ -83,7 +83,7 @@ public class StructReader {
 
 	protected final short _getShortField(int offset) {
 		if ((offset + 1) * 16 <= this.dataSize) {							// 16 Bit in a short value
-			return this.segment.buffer.getShort(this.data + offset * 2);	// this would assume, thatthe whole buffer only contains short values
+			return this.segment.buffer.getShort(this.data + offset * 2);	// this would assume, that the whole buffer only contains short values
 		} else {
 			return 0;
 		}

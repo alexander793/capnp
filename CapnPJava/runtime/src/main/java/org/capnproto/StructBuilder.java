@@ -57,7 +57,7 @@ public class StructBuilder {
 		byte bitnum = (byte) (offset % Constants.BITS_PER_BYTE);
 		int position = this.data + (offset / Constants.BITS_PER_BYTE);
 		byte oldValue = this.segment.buffer.get(position);
-		this.segment.buffer.put(position, (byte) ((oldValue & (~(1 << bitnum))) | ((value ? 1 : 0) << bitnum)));		// first reset the byte and then set it to the new value
+		this.segment.buffer.put(position, (byte) ((oldValue & (~(1 << bitnum))) | ((value ? 1 : 0) << bitnum)));		// first reset the bit and then set it to the new value
 	}
 
 	protected final void _setBooleanField(int offset, boolean value, boolean mask) {
@@ -65,7 +65,11 @@ public class StructBuilder {
 	}
 
 	protected final byte _getByteField(int offset) {
-		return this.segment.buffer.get(this.data + offset);
+		if ((offset + 1) * Constants.BITS_PER_BYTE <= this.dataSize) {				// checks if the end of the wanted byte would still be in the datasize boundaries. If not, this method will return zero
+			return this.segment.buffer.get(this.data + offset);
+		} else {
+			return 0;
+		}
 	}
 
 	protected final byte _getByteField(int offset, byte mask) {
@@ -81,7 +85,11 @@ public class StructBuilder {
 	}
 
 	protected final short _getShortField(int offset) {
-		return this.segment.buffer.getShort(this.data + offset * 2);
+		if ((offset + 1) * 16 <= this.dataSize) {							// 16 Bit in a short value
+			return this.segment.buffer.getShort(this.data + offset * 2);	// this would assume, that the whole buffer only contains short values
+		} else {
+			return 0;
+		}
 	}
 
 	protected final short _getShortField(int offset, short mask) {
@@ -97,7 +105,11 @@ public class StructBuilder {
 	}
 
 	protected final int _getIntField(int offset) {
-		return this.segment.buffer.getInt(this.data + offset * 4);
+		if ((offset + 1) * 32 <= this.dataSize) {							//32 Bit in an int value
+			return this.segment.buffer.getInt(this.data + offset * 4);
+		} else {
+			return 0;
+		}
 	}
 
 	protected final int _getIntField(int offset, int mask) {
@@ -113,7 +125,11 @@ public class StructBuilder {
 	}
 
 	protected final long _getLongField(int offset) {
-		return this.segment.buffer.getLong(this.data + offset * 8);
+		if ((offset + 1) * 64 <= this.dataSize) {							// 64 Bit in a long value
+			return this.segment.buffer.getLong(this.data + offset * 8);
+		} else {
+			return 0;
+		}
 	}
 
 	protected final long _getLongField(int offset, long mask) {
@@ -129,11 +145,19 @@ public class StructBuilder {
 	}
 
 	protected final float _getFloatField(int offset) {
-		return this.segment.buffer.getFloat(this.data + offset * 4);
+		if ((offset + 1) * 32 <= this.dataSize) {							// 32 Bit in a float value
+			return this.segment.buffer.getFloat(this.data + offset * 4);
+		} else {
+			return 0;
+		}
 	}
 
 	protected final float _getFloatField(int offset, int mask) {
-		return Float.intBitsToFloat(this.segment.buffer.getInt(this.data + offset * 4) ^ mask);
+		if ((offset + 1) * 32 <= this.dataSize) {
+			return Float.intBitsToFloat(this.segment.buffer.getInt(this.data + offset * 4) ^ mask);
+		} else {
+			return Float.intBitsToFloat(mask);
+		}
 	}
 
 	protected final void _setFloatField(int offset, float value) {
@@ -145,11 +169,19 @@ public class StructBuilder {
 	}
 
 	protected final double _getDoubleField(int offset) {
-		return this.segment.buffer.getDouble(this.data + offset * 8);
+		if ((offset + 1) * 64 <= this.dataSize) {							// 64 Bit in a double value
+			return this.segment.buffer.getDouble(this.data + offset * 8);
+		} else {
+			return 0;
+		}
 	}
 
 	protected final double _getDoubleField(int offset, long mask) {
-		return Double.longBitsToDouble(this.segment.buffer.getLong(this.data + offset * 8) ^ mask);
+		if ((offset + 1) * 64 <= this.dataSize) {
+			return Double.longBitsToDouble(this.segment.buffer.getLong(this.data + offset * 8) ^ mask);
+		} else {
+			return Double.longBitsToDouble(mask);
+		}
 	}
 
 	protected final void _setDoubleField(int offset, double value) {

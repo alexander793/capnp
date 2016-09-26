@@ -145,11 +145,11 @@ public final class PackedOutputStream implements WritableByteChannel {
 						int oldLimit = out.limit();																// save the current limit of the buffer
 						out.limit(out.position());
 						out.rewind();
-						this.inner.write(out);																	// writes the bytes that are allready in the buffer to the output stream
+						this.inner.write(out);																	// writes the bytes that are already in the buffer to the output stream
 						out.limit(oldLimit);																	// after that, we set the limit of the buffer back to the old one
 					}
 
-					inBuf.position(runStart);																	// because there is no more space left in the ouput buffer
+					inBuf.position(runStart);																	// because there is no more space left in the output buffer
 					ByteBuffer slice = inBuf.slice();
 					slice.limit(count);
 					while (slice.hasRemaining()) {
@@ -163,7 +163,7 @@ public final class PackedOutputStream implements WritableByteChannel {
 
 		if (out == slowBuffer) {																				// no idea
 			out.limit(out.position());
-			out.rewind();																						// if there are finaly no more btes left on the input stream 
+			out.rewind();																						// if there are finally no more bytes left on the input stream 
 			this.inner.write(out);																				// write the rest of the buffered bytes to the output stream
 		}
 
