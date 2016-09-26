@@ -64,38 +64,38 @@ public class ListReader {
 	}
 
 	protected boolean _getBooleanElement(int index) {														//checks if a specified bit of a list element is set or not
-		long bitIndex = (long) index * this.step;
-		byte b = this.segment.buffer.get(this.ptr + (int) (bitIndex / Constants.BITS_PER_BYTE));
+		int bitIndex = Math.multiplyExact(index, this.step);
+		byte b = this.segment.buffer.get(this.ptr + bitIndex / Constants.BITS_PER_BYTE);
 		return (b & (1 << (bitIndex % Constants.BITS_PER_BYTE))) != 0;
 	}
 
 	protected byte _getByteElement(int index) {																					// reads the bytes of the element at the given index
-		return this.segment.buffer.get(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);
 	}
 
 	protected short _getShortElement(int index) {																				// reads the bytes of the element at the given index
-		return this.segment.buffer.getShort(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));				// and transforms them into a short value
+		return this.segment.buffer.getShort(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);				// and transforms them into a short value
 	}
 
 	protected int _getIntElement(int index) {																					// reads the bytes of the element at the given index
-		return this.segment.buffer.getInt(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));					// and transforms them into an int value
+		return this.segment.buffer.getInt(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);					// and transforms them into an int value
 	}
 
 	protected long _getLongElement(int index) {																					// reads the bytes of the element at the given index
-		return this.segment.buffer.getLong(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));				// and transforms them into a long value
+		return this.segment.buffer.getLong(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);				// and transforms them into a long value
 	}
 
 	protected float _getFloatElement(int index) {																				// reads the bytes of the element at the given index
-		return this.segment.buffer.getFloat(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));				// and transforms them into a float value
+		return this.segment.buffer.getFloat(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);				// and transforms them into a float value
 	}
 
 	protected double _getDoubleElement(int index) {																				// reads the bytes of the element at the given index
-		return this.segment.buffer.getDouble(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE));				// and transforms them into a double value
+		return this.segment.buffer.getDouble(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE);				// and transforms them into a double value
 	}
 
 	protected <T> T _getStructElement(StructReader.Factory<T> factory, int index) {												//creates a new Reader for a struct object
 		// TODO check nesting limit
-		int structData = this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE);					// beginning of the DataSection of the struct
+		int structData = this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE;					// beginning of the DataSection of the struct
 		int structPointers = (structData + (this.structDataSize / Constants.BITS_PER_BYTE)) / Constants.BYTES_PER_WORD;		// beginning of the PointerSection of the struct
 
 		return factory.constructReader(this.segment, structData, structPointers, this.structDataSize, this.structPointerCount,
@@ -103,15 +103,16 @@ public class ListReader {
 	}
 
 	protected <T> T _getPointerElement(FromPointerReader<T> factory, int index) {												//creates a new Reader for a pointer Object
-		return factory.fromPointerReader(this.segment, (this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE))
-				/ Constants.BYTES_PER_WORD, this.nestingLimit);
+		return factory.fromPointerReader(this.segment,
+				(this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE) / Constants.BYTES_PER_WORD,
+				this.nestingLimit);
 	}
 
 	protected <T> T _getPointerElement(FromPointerReaderBlobDefault<T> factory, int index,										//creates a new Reader for a pointer Object
 			java.nio.ByteBuffer defaultBuffer, int defaultOffset, int defaultSize) {
-		return factory.fromPointerReaderBlobDefault(this.segment,
-				(this.ptr + (int) ((long) index * this.step / Constants.BITS_PER_BYTE)) / Constants.BYTES_PER_WORD,
-				defaultBuffer, defaultOffset, defaultSize);
+		return factory.fromPointerReaderBlobDefault(this.segment, (this.ptr + Math.multiplyExact(index, this.step)
+				/ Constants.BITS_PER_BYTE)
+				/ Constants.BYTES_PER_WORD, defaultBuffer, defaultOffset, defaultSize);
 	}
 
 }

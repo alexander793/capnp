@@ -34,7 +34,7 @@ public final class BufferedInputStreamWrapper implements BufferedInputStream {
 	public BufferedInputStreamWrapper(ReadableByteChannel chan) {
 		this.inner = chan;
 		this.buf = ByteBuffer.allocate(8192);  						// allocates a new ByteBuffer with a limit of 8192 Bits
-		this.buf.limit(0);											// sets the limit of the Buffer to 0, so it reverts the limit of the previous allocate. ->> WHY ?
+		this.buf.limit(0);											// sets the limit of the Buffer to 0, saying that there is nothing to read yet
 	}
 
 	public final int read(ByteBuffer dst) throws IOException {		// should be called readToByteBuffer or something like this
@@ -49,11 +49,10 @@ public final class BufferedInputStreamWrapper implements BufferedInputStream {
 		} else {													// if the destination has enough space left to take all the bytes of thisBuffer
 			//# Copy current available into destination.
 			int fromFirstBuffer = this.buf.remaining();
-			{														//strange curly brackets here
-				ByteBuffer slice = this.buf.slice();
-				slice.limit(fromFirstBuffer);
-				dst.put(slice);										// copies all the bytes of this.Buffer to the destination
-			}
+
+			ByteBuffer slice = this.buf.slice();
+			slice.limit(fromFirstBuffer);
+			dst.put(slice);										// copies all the bytes of this.Buffer to the destination
 
 			numBytes -= fromFirstBuffer;							//updates the number of remaining bytes in the destination
 			if (numBytes <= this.buf.capacity()) {					// if the amount of remaining bytes in the destination is smaller than the capacity of this.Buffer 
@@ -62,9 +61,9 @@ public final class BufferedInputStreamWrapper implements BufferedInputStream {
 				int n = readAtLeast(this.inner, this.buf, numBytes);	//read as many bytes from this.Channel to this.Buffer as there are bytes left in the destination Buffer
 
 				this.buf.rewind();									// sets the pointer to the start of the buffer, because the content is all new
-				ByteBuffer slice = this.buf.slice();
-				slice.limit(numBytes);
-				dst.put(slice);										// puts as many bytes from this.Buffer to the destination buffer as there is space left
+				ByteBuffer bigSlice = this.buf.slice();
+				bigSlice.limit(numBytes);
+				dst.put(bigSlice);										// puts as many bytes from this.Buffer to the destination buffer as there is space left
 
 				this.buf.limit(n);									// sets the limit of this.buffer to the number of bytes read in total
 				this.buf.position(numBytes);						// sets the position of this.buffer to the first byte, which has not been read to the destination buffer

@@ -45,9 +45,8 @@ public class StructBuilder {
 	}
 
 	protected final boolean _getBooleanField(int offset) {								// offset from the start of the data section to the actual object
-		int bitOffset = offset;															// useless
-		int position = this.data + (bitOffset / Constants.BYTES_PER_WORD);										// calculates the actual position of the object in the data section
-		return (this.segment.buffer.get(position) & (1 << (bitOffset % Constants.BITS_PER_BYTE))) != 0;		// checks if a single bit in the object is set
+		int position = this.data + (offset / Constants.BYTES_PER_WORD);										// calculates the actual position of the object in the data section
+		return (this.segment.buffer.get(position) & (1 << (offset % Constants.BITS_PER_BYTE))) != 0;		// checks if a single bit in the object is set
 	}
 
 	protected final boolean _getBooleanField(int offset, boolean mask) {				// compares the result of the normal getBooleanField method with the mask
@@ -55,9 +54,8 @@ public class StructBuilder {
 	}
 
 	protected final void _setBooleanField(int offset, boolean value) {					// sets a special bit in a byte to the given value
-		int bitOffset = offset;
-		byte bitnum = (byte) (bitOffset % Constants.BITS_PER_BYTE);
-		int position = this.data + (bitOffset / Constants.BITS_PER_BYTE);
+		byte bitnum = (byte) (offset % Constants.BITS_PER_BYTE);
+		int position = this.data + (offset / Constants.BITS_PER_BYTE);
 		byte oldValue = this.segment.buffer.get(position);
 		this.segment.buffer.put(position, (byte) ((oldValue & (~(1 << bitnum))) | ((value ? 1 : 0) << bitnum)));		// first reset the byte and then set it to the new value
 	}

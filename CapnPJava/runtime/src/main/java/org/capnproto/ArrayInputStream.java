@@ -34,7 +34,6 @@ public final class ArrayInputStream implements BufferedInputStream {
 	}
 
 	public final int read(ByteBuffer dst) throws IOException {
-		int available = this.buf.remaining();						// available bytes of this.buffer  ->> not used
 		int size = dst.remaining();									//number of bytes remaining in the destination buffer
 
 		ByteBuffer slice = this.buf.slice();
