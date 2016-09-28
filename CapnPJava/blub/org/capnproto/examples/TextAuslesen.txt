@@ -1,0 +1,13 @@
+(people = [
+	(id = 445, 
+	 name = "dsdjn", 
+	 employment = (employer = "GGV")
+	),
+	(id = 455, 
+	 name = "TestPerson", 
+	 employment = (school = "TUD"),
+	 phones = [
+		(number = "0815", type = mobile)
+	 ]
+	)]
+)
