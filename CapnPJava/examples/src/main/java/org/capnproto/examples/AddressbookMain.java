@@ -60,9 +60,10 @@ public class AddressbookMain {
 		bobPhones.get(1).setType(Person.PhoneNumber.Type.WORK);
 		bob.getEmployment().setUnemployed(org.capnproto.Void.VOID);
 
-		//Aus Textdatei lesen
+		//read from txt file
 		/*
-		 * BufferedReader in = new BufferedReader(new FileReader("TextAuslesen.txt"));
+		 * BufferedReader in = new BufferedReader(new
+		 * FileReader("examples/src/main/java/org/capnproto/examples/TextAuslesen.txt"));
 		 * String line;
 		 * while((line = in.readLine()) != null)
 		 * {
@@ -79,8 +80,9 @@ public class AddressbookMain {
 		FileInputStream fis = new FileInputStream(FileDescriptor.in);
 		org.capnproto.MessageReader message = org.capnproto.SerializePacked.readFromUnbuffered(fis.getChannel());
 		AddressBook.Reader addressbook = message.getRoot(AddressBook.factory);
-		BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("TextRead.txt", false)));		// gelesenes in Textdatei schreiben
-		String stringOutput;																								// OutputString, der auf Kommandozeile und in Datei geschrieben wird
+		BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+				"examples/src/main/java/org/capnproto/examples/TextRead.txt", false)));		// write the read data to txt file
+		String stringOutput;															// output string, which will be shown at the command line
 		for (Person.Reader person : addressbook.getPeople()) {
 			stringOutput = person.getName() + ": " + person.getEmail();
 			System.out.println(stringOutput);
@@ -130,7 +132,7 @@ public class AddressbookMain {
 			fw.write(stringOutput);
 			fw.append(System.getProperty("line.separator"));
 		}
-		fw.close();			//FileWriterVerbindung schließen
+		fw.close();			// close the FileWriterConnection
 		fis.close();
 	}
 

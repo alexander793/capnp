@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 
 final class WireHelpers {
 
-	public static void writeSlice(ByteBuffer src, int number, ByteBuffer dst) {
+	public static void writeSlice(ByteBuffer src, int number, ByteBuffer dst) {				//writes a slice of an input buffer to an output buffer 
 		ByteBuffer slice = src.slice();
 		slice.limit(number);
 		dst.put(slice);
@@ -47,9 +47,9 @@ final class WireHelpers {
 
 	static class AllocateResult {							// the result of an allocation
 
-		public final int ptr;
-		public final int refOffset;
-		public final SegmentBuilder segment;
+		public final int ptr;								// maybe a pointer to the allocated result ?
+		public final int refOffset;							// the offset to the pointers data
+		public final SegmentBuilder segment;				// the WirePointer in segment form
 
 		AllocateResult(int ptr, int refOffset, SegmentBuilder segment) {
 			this.ptr = ptr;
