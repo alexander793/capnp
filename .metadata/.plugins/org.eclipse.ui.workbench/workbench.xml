@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="12" version="2.0">
+<workbench progressCount="18" version="2.0">
 <workbenchAdvisor/>
-<window height="795" maximized="true" width="1018" x="237" y="24">
+<window height="772" maximized="true" width="1012" x="-167" y="24">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -19,6 +19,8 @@
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="232" y="30"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
+<coolItem id="org.eclipse.jdt.ui.ClassFileEditorNoSource" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.pde.ui.buildEditor" itemType="typePlaceholder" x="40" y="30"/>
 <coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
@@ -31,17 +33,44 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
+<part id="4"/>
+<part id="5"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructBuilder.java" partName="StructBuilder.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/StructBuilder.java" title="StructBuilder.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructBuilder.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructBuilder.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4199" selectionTopPixel="0"/>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="AnyPointer.java" partName="AnyPointer.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java" title="AnyPointer.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="646"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Arena.java" partName="Arena.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/Arena.java" title="Arena.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/Arena.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/Arena.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ArrayInputStream.java" partName="ArrayInputStream.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java" title="ArrayInputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ArrayOutputStream.java" partName="ArrayOutputStream.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java" title="ArrayOutputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="BufferedInputStream.java" partName="BufferedInputStream.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java" title="BufferedInputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="BufferedInputStreamWrapper.java" partName="BufferedInputStreamWrapper.java" path="/home/rscs/capnp.git/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java" title="BufferedInputStreamWrapper.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2629" selectionTopPixel="75"/>
 </editor>
 </editors>
 <views>
-<view id="org.eclipse.jdt.ui.JavadocView" partName="Javadoc"/>
+<view id="org.eclipse.jdt.ui.JavadocView" partName="Javadoc">
+<viewState/>
+</view>
 <view id="org.eclipse.jdt.ui.PackageExplorer" partName="Package Explorer">
 <viewState group_libraries="1" layout="2" linkWithEditor="0" rootMode="1" workingSetName="">
 <customFilters userDefinedPatternsEnabled="false">
@@ -73,12 +102,7 @@
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
-<expanded>
-<category IMemento.internal.id="Errors"/>
-<category IMemento.internal.id="Warnings (1 item)"/>
-<category IMemento.internal.id="Warnings"/>
-</expanded>
-<columnWidths org.eclipse.ui.ide.locationField="105" org.eclipse.ui.ide.markerType="837" org.eclipse.ui.ide.pathField="140" org.eclipse.ui.ide.resourceField="105" org.eclipse.ui.ide.severityAndDescriptionField="437"/>
+<columnWidths org.eclipse.ui.ide.locationField="105" org.eclipse.ui.ide.markerType="837" org.eclipse.ui.ide.pathField="140" org.eclipse.ui.ide.resourceField="105" org.eclipse.ui.ide.severityAndDescriptionField="641"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
@@ -86,9 +110,21 @@
 <visible IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
 </viewState>
 </view>
-<view id="org.eclipse.jdt.ui.SourceView" partName="Declaration"/>
+<view id="org.eclipse.ui.console.ConsoleView" partName="Console">
+<viewState/>
+</view>
+<view id="org.eclipse.jdt.ui.SourceView" partName="Declaration">
+<viewState/>
+</view>
 <view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
 <viewState/>
+</view>
+<view id="org.eclipse.search.ui.views.SearchView" partName="Search">
+<viewState isPinned="false">
+<view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="4" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
+<view IMemento.internal.id="org.eclipse.jdt.ui.JavaSearchResultPage" org.eclipse.jdt.search.resultpage.grouping="3" org.eclipse.jdt.search.resultpage.limit="1000" org.eclipse.jdt.search.resultpage.limit_enabled="TRUE" org.eclipse.jdt.search.resultpage.sorting="1" org.eclipse.search.lastActivation="5" org.eclipse.search.resultpage.layout="2"/>
+<view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
+</viewState>
 </view>
 <view id="org.eclipse.ui.views.TaskList" partName="Tasks">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.completionField" categoryGroup="none" markerContentGenerator="org.eclipse.ui.ide.tasksGenerator" partName="Tasks">
@@ -106,7 +142,7 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
 </view>
 </views>
-<perspectives activePart="org.eclipse.jdt.ui.PackageExplorer" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
+<perspectives activePart="org.eclipse.jdt.ui.CompilationUnitEditor" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.eclipse.ui.internal.ide.application.ResourcePerspective" id="org.eclipse.ui.resourcePerspective" label="Resource"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -141,47 +177,32 @@
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <view id="org.eclipse.ui.views.TaskList"/>
 <fastViewBars/>
-<layout>
-<mainWindow>
-<info folder="true" part="topLeft">
-<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">
-<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="topLeft">&#x0A;<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.team.ccvs.ui.RepositoriesView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.7495049" ratioLeft="757" ratioRight="253" relationship="2" relative="topLeft">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.7495049" ratioLeft="757" ratioRight="253" relationship="2" relative="topLeft">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.14186047" ratioLeft="183" ratioRight="1107" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottomRight" ratio="0.89161557" ratioLeft="872" ratioRight="106" relationship="4" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.team.ui.GenericHistoryView" label="LabelNotFound"/>
+<info folder="true" part="bottomRight" ratio="0.89161557" ratioLeft="872" ratioRight="106" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.team.ui.GenericHistoryView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@39c5efe9" ratio="0.8618619" ratioLeft="574" ratioRight="92" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.views.TaskList" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@39c5efe9" ratio="0.8618619" ratioLeft="574" ratioRight="92" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="org.eclipse.ui.views.TaskList" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="bottomLeft" ratio="0.94989777" ratioLeft="929" ratioRight="49" relationship="4" relative="topLeft">
-<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<info folder="true" part="bottomLeft" ratio="0.94989777" ratioLeft="929" ratioRight="49" relationship="4" relative="topLeft">&#x0A;<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 </presentation>
 </folder>
 </info>
@@ -235,13 +256,15 @@
 <new_wizard_action id="org.eclipse.jdt.junit.wizards.NewTestCaseCreationWizard"/>
 <perspective_action id="org.eclipse.jdt.ui.JavaBrowsingPerspective"/>
 <perspective_action id="org.eclipse.debug.ui.DebugPerspective"/>
+<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <hide_toolbar_item_id id="org.eclipse.debug.ui.commands.RunToLine"/>
 <hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
-<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <view id="org.eclipse.jdt.ui.PackageExplorer"/>
 <view id="org.eclipse.ui.views.ProblemView"/>
 <view id="org.eclipse.jdt.ui.JavadocView"/>
 <view id="org.eclipse.jdt.ui.SourceView"/>
+<view id="org.eclipse.ui.console.ConsoleView"/>
+<view id="org.eclipse.search.ui.views.SearchView"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViewBars/>
 <layout>
@@ -265,20 +288,23 @@
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.11605206" ratioLeft="214" ratioRight="1630" relationship="2" relative="left"/>
-<info folder="true" part="bottom" ratio="0.8169734" ratioLeft="799" ratioRight="179" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.views.ProblemView" appearance="2" expanded="2">
+<info part="org.eclipse.ui.editorss" ratio="0.15618221" ratioLeft="288" ratioRight="1556" relationship="2" relative="left"/>
+<info folder="true" part="bottom" ratio="0.8573574" ratioLeft="571" ratioRight="95" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.jdt.ui.JavadocView" label="Javadoc"/>
 <page content="org.eclipse.jdt.ui.SourceView" label="Declaration"/>
-<page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
+<page content="org.eclipse.jdt.callhierarchy.view" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
 <part id="2"/>
+<part id="3"/>
+<part id="4"/>
 </presentation>
 </folder>
 </info>
@@ -300,164 +326,173 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructBuilder.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/Constants.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructSize.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/WireHelpers.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/WirePointer.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/Data.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructReader.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructFactory.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/SegmentReader.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/SegmentBuilder.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/Void.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/CapnPJava/TextAuslesen.txt"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/CapnPJava/TextRead.txt"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/examples/src/main/java/org/capnproto/examples/Addressbook.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/PrimitiveList.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.pde.ui.buildEditor" path="/CapnPJava/project/build.properties"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/StructSize.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/Arena.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/PackedOutputStream.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java"/>
 </editors>
-<item historyLabel="WirePointer.java" index="4">
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7781" y="0"/>
+</item>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5344" y="35"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
 <position/>
 </item>
-<item historyLabel="StructSize.java" index="2">
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5396" y="0"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7745" y="0"/>
+</item>
+<item historyLabel="StructFactory.java" index="2">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="WireHelpers.java" index="3">
-<position info="not_deleted" x="10665" y="0"/>
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7745" y="0"/>
 </item>
-<item historyLabel="Constants.java" index="1">
-<position info="not_deleted" x="1400" y="14"/>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5396" y="0"/>
 </item>
-<item historyLabel="StructSize.java" index="2">
+<item historyLabel="SegmentReader.java" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="WireHelpers.java" index="3">
-<position info="not_deleted" x="10665" y="0"/>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5396" y="0"/>
 </item>
-<item historyLabel="StructSize.java" index="2">
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7745" y="0"/>
+</item>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5396" y="0"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7745" y="0"/>
+</item>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5523" y="22"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7778" y="0"/>
+</item>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5523" y="22"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
+<position info="not_deleted" x="7898" y="0"/>
+</item>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5523" y="22"/>
+</item>
+<item historyLabel="StructBuilder.java" index="0">
+<position/>
+</item>
+<item historyLabel="SegmentBuilder.java" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Constants.java" index="1">
-<position info="not_deleted" x="1307" y="16"/>
-</item>
-<item historyLabel="WireHelpers.java" index="3">
-<position info="not_deleted" x="33722" y="0"/>
-</item>
-<item historyLabel="ElementSize.java" index="5">
+<item historyLabel="SegmentReader.java" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="WireHelpers.java" index="3">
-<position info="not_deleted" x="40618" y="0"/>
-</item>
-<item historyLabel="WirePointer.java" index="4">
+<item historyLabel="StructFactory.java" index="2">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Data.java" index="6">
-<position info="not_deleted" x="4327" y="0"/>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="5523" y="22"/>
 </item>
 <item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2358" y="23"/>
+<position info="not_deleted" x="7456" y="0"/>
 </item>
-<item historyLabel="WireHelpers.java" index="3">
-<position info="not_deleted" x="40618" y="0"/>
+<item historyLabel="StructReader.java" index="1">
+<position info="not_deleted" x="3045" y="0"/>
 </item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2358" y="23"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2171" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2358" y="23"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2171" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2358" y="23"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2171" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="3946" y="119"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2171" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="3946" y="119"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="3178" y="0"/>
-</item>
-<item historyLabel="ElementSize.java" index="8">
+<item historyLabel="Void.java" index="5">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2910" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="1919" y="0"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2844" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="3350" y="0"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="3312" y="0"/>
-</item>
-<item historyLabel="build.properties" index="9"/>
-<item historyLabel="ArrayInputStream.java" index="10">
-<position info="not_deleted" x="2150" y="0"/>
-</item>
-<item historyLabel="build.properties" index="9"/>
-<item historyLabel="ArrayInputStream.java" index="10">
-<position info="not_deleted" x="2150" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="3350" y="0"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2927" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2603" y="0"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2927" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="2717" y="0"/>
-</item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2927" y="0"/>
-</item>
-<item historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="1870" y="0"/>
-</item>
-<item historyLabel="PackedOutputStream.java" index="11">
+<item historyLabel="TextAuslesen.txt" index="6">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="PackedOutputStream.java" index="11">
-<position info="not_deleted" x="3474" y="0"/>
-</item>
-<item historyLabel="PackedOutputStream.java" index="11">
-<position info="not_deleted" x="8251" y="0"/>
-</item>
-<item historyLabel="BufferedInputStreamWrapper.java" index="12">
+<item historyLabel="TextRead.txt" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="StructReader.java" index="7">
-<position info="not_deleted" x="2927" y="0"/>
-</item>
-<item historyLabel="PackedOutputStream.java" index="11">
-<position info="not_deleted" x="8172" y="0"/>
-</item>
-<item historyLabel="BufferedInputStreamWrapper.java" index="12">
+<item historyLabel="TextRead.txt" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item active="true" historyLabel="StructBuilder.java" index="0">
-<position info="not_deleted" x="1870" y="0"/>
+<item historyLabel="AnyPointer.java" index="8">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="Void.java" index="5">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="Addressbook.java" index="9">
+<position info="not_deleted" x="132" y="11"/>
+</item>
+<item historyLabel="PrimitiveList.java" index="10">
+<position info="not_deleted" x="1188" y="0"/>
+</item>
+<item historyLabel="PrimitiveList.java" index="10">
+<position info="not_deleted" x="2053" y="0"/>
+</item>
+<item historyLabel="ElementSize.java" index="11">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="PrimitiveList.java" index="10">
+<position info="not_deleted" x="2053" y="0"/>
+</item>
+<item historyLabel="ElementSize.java" index="11">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="PrimitiveList.java" index="10">
+<position/>
+</item>
+<item historyLabel="Addressbook.java" index="9">
+<position info="not_deleted" x="11745" y="0"/>
+</item>
+<item historyLabel="PrimitiveList.java" index="10">
+<position info="not_deleted" x="2264" y="0"/>
+</item>
+<item historyLabel="StructSize.java" index="12">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="TextRead.txt" index="7">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="AnyPointer.java" index="8">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="Arena.java" index="13">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="ArrayInputStream.java" index="14">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="ArrayOutputStream.java" index="15">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="BufferedInputStream.java" index="16">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="BufferedInputStreamWrapper.java" index="17">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="BufferedInputStreamWrapper.java" index="17">
+<position info="not_deleted" x="5037" y="0"/>
+</item>
+<item active="true" historyLabel="BufferedInputStreamWrapper.java" index="17">
+<position/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -465,12 +500,6 @@
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
-<trimArea IMemento.internal.id="16384">
-<trimItem IMemento.internal.id="left"/>
-</trimArea>
-<trimArea IMemento.internal.id="131072">
-<trimItem IMemento.internal.id="right"/>
-</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -478,7 +507,6 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
-<trimItem IMemento.internal.id="bottom"/>
 </trimArea>
 </trimLayout>
 </window>
@@ -486,47 +514,47 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="BufferedInputStreamWrapper.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java">
 <persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStreamWrapper.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PackedOutputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/PackedOutputStream.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/PackedOutputStream.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="BufferedInputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/BufferedInputStream.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ArrayOutputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayOutputStream.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ArrayInputStream.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java">
 <persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/ArrayInputStream.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.systemExternalEditor" name="build.scala" tooltip="CapnPJava/project/build.scala">
-<persistable path="/CapnPJava/project/build.scala"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Arena.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/Arena.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/Arena.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.pde.ui.buildEditor" name="build.properties" tooltip="CapnPJava/project/build.properties">
-<persistable path="/CapnPJava/project/build.properties"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ElementSize.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructReader.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructReader.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/StructReader.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Data.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/Data.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/Data.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="WirePointer.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/WirePointer.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/WirePointer.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="WireHelpers.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/WireHelpers.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/WireHelpers.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TextList.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/TextList.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/TextList.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Text.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/Text.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/Text.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="AnyPointer.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/AnyPointer.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructSize.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructSize.java">
 <persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/StructSize.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructPointer.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructPointer.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/StructPointer.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Addressbook.java" tooltip="CapnPJava/examples/src/main/java/org/capnproto/examples/Addressbook.java">
+<persistable path="/CapnPJava/examples/src/main/java/org/capnproto/examples/Addressbook.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructList.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructList.java">
-<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/StructList.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ElementSize.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/ElementSize.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="TextRead.txt" tooltip="CapnPJava/TextRead.txt">
+<persistable path="/CapnPJava/TextRead.txt"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="TextAuslesen.txt" tooltip="CapnPJava/TextAuslesen.txt">
+<persistable path="/CapnPJava/TextAuslesen.txt"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Void.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/Void.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/Void.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SegmentBuilder.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/SegmentBuilder.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/SegmentBuilder.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SegmentReader.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/SegmentReader.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/SegmentReader.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StructFactory.java" tooltip="CapnPJava/runtime/src/main/java/org/capnproto/StructFactory.java">
+<persistable path="/CapnPJava/runtime/src/main/java/org/capnproto/StructFactory.java"/>
 </file>
 </mruList>
 </workbench>

@@ -41,29 +41,23 @@ public final class BufferedInputStreamWrapper implements BufferedInputStream {
 		int numBytes = dst.remaining();								// number of bytes left to read in the ByteBuffer 
 		if (numBytes < this.buf.remaining()) {						// if the destination buffer has not enough room to take the bytes of the this.Buffer
 			//# Serve from the current buffer.
-			ByteBuffer slice = this.buf.slice();					//copies as many bytes from this.ByteBuffer to the destination ByteBuffer as available in the destination Buffer
-			slice.limit(numBytes);
-			dst.put(slice);
-			this.buf.position(this.buf.position() + numBytes);		//sets new position to the Bytes not read yet
+			WireHelpers.writeSlice(this.buf, numBytes, dst);					// copies as many bytes from this.ByteBuffer to the destination ByteBuffer as available in the destination Buffer
+			this.buf.position(this.buf.position() + numBytes);		// sets new position to the Bytes not read yet
 			return numBytes;										// returns number of bytes read to the destination
 		} else {													// if the destination has enough space left to take all the bytes of thisBuffer
 			//# Copy current available into destination.
 			int fromFirstBuffer = this.buf.remaining();
 
-			ByteBuffer slice = this.buf.slice();
-			slice.limit(fromFirstBuffer);
-			dst.put(slice);										// copies all the bytes of this.Buffer to the destination
+			WireHelpers.writeSlice(this.buf, fromFirstBuffer, dst);				// copies all the bytes of this.Buffer to the destination
 
-			numBytes -= fromFirstBuffer;							//updates the number of remaining bytes in the destination
+			numBytes -= fromFirstBuffer;							// updates the number of remaining bytes in the destination
 			if (numBytes <= this.buf.capacity()) {					// if the amount of remaining bytes in the destination is smaller than the capacity of this.Buffer 
 				//# Read the next buffer-full.
 				this.buf.clear();
-				int n = readAtLeast(this.inner, this.buf, numBytes);	//read as many bytes from this.Channel to this.Buffer as there are bytes left in the destination Buffer
+				int n = readAtLeast(this.inner, this.buf, numBytes);	// read as many bytes from this.Channel to this.Buffer as there are bytes left in the destination Buffer
 
 				this.buf.rewind();									// sets the pointer to the start of the buffer, because the content is all new
-				ByteBuffer bigSlice = this.buf.slice();
-				bigSlice.limit(numBytes);
-				dst.put(bigSlice);										// puts as many bytes from this.Buffer to the destination buffer as there is space left
+				WireHelpers.writeSlice(this.buf, numBytes, dst);				// puts as many bytes from this.Buffer to the destination buffer as there is space left
 
 				this.buf.limit(n);									// sets the limit of this.buffer to the number of bytes read in total
 				this.buf.position(numBytes);						// sets the position of this.buffer to the first byte, which has not been read to the destination buffer

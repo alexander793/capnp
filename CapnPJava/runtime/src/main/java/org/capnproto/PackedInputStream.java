@@ -104,9 +104,7 @@ public final class PackedInputStream implements ReadableByteChannel {
 
 				if (inBuf.remaining() >= runLength) {								// if there are more words to be written, than the unpacked ones
 					//# Fast path.
-					ByteBuffer slice = inBuf.slice();
-					slice.limit(runLength);
-					outBuf.put(slice);
+					WireHelpers.writeSlice(inBuf, runLength, outBuf);
 					inBuf.position(inBuf.position() + runLength);					// writes the next number of bytes(specified by runLength) straight to the output buffer 
 				} else {
 					//# Copy over the first buffer, then do one big read for the rest.

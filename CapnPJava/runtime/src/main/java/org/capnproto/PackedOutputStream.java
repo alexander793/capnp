@@ -133,9 +133,7 @@ public final class PackedOutputStream implements WritableByteChannel {
 				if (count <= out.remaining()) {																	// if there is as least as much space left on the output buffer as the number of uncompressed words
 					//# There's enough space to memcpy.
 					inBuf.position(runStart);
-					ByteBuffer slice = inBuf.slice();
-					slice.limit(count);
-					out.put(slice);																				// copies the calculated number of words from the input buffer directly to the output buffer
+					WireHelpers.writeSlice(inBuf, count, out);													// copies the calculated number of words from the input buffer directly to the output buffer
 				} else {																						// if there is not enough space left in the output buffer to take all the uncompressed words
 					//# Input overruns the output buffer. We'll give it
 					//# to the output stream in one chunk and let it

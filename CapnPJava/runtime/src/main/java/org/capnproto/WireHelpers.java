@@ -26,17 +26,23 @@ import java.nio.ByteBuffer;
 
 final class WireHelpers {
 
+	public static void writeSlice(ByteBuffer src, int number, ByteBuffer dst) {
+		ByteBuffer slice = src.slice();
+		slice.limit(number);
+		dst.put(slice);
+	}
+
 	static int roundBytesUpToWords(int bytes) {
-		return (bytes + (Constants.BYTES_PER_WORD-1)) / Constants.BYTES_PER_WORD;						// round up to multiple of 8.E.g: bytes = 11(->1word & 3 bytes) then bytes + 7 = 18. 18/8 = 2 -> single 3 bytes stuffed in the 2. word
+		return (bytes + (Constants.BYTES_PER_WORD - 1)) / Constants.BYTES_PER_WORD;						// round up to multiple of 8.E.g: bytes = 11(->1word & 3 bytes) then bytes + 7 = 18. 18/8 = 2 -> single 3 bytes stuffed in the 2. word
 	}
 
 	static int roundBitsUpToBytes(int bits) {				// rounds the given number of bits up to byte boundaries 
-		return (bits + (Constants.BITS_PER_BYTE -1)) / Constants.BITS_PER_BYTE;
+		return (bits + (Constants.BITS_PER_BYTE - 1)) / Constants.BITS_PER_BYTE;
 	}
 
 	static int roundBitsUpToWords(long bits) {				// rounds number of bits up to word boundaries
 		//# This code assumes 64-bit words.
-		return (int) ((bits + (Constants.BITS_PER_WORD-1)) / ((long) Constants.BITS_PER_WORD));
+		return (int) ((bits + (Constants.BITS_PER_WORD - 1)) / ((long) Constants.BITS_PER_WORD));
 	}
 
 	static class AllocateResult {							// the result of an allocation

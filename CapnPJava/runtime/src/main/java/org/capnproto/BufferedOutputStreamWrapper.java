@@ -44,9 +44,8 @@ public final class BufferedOutputStreamWrapper implements BufferedOutputStream {
 		} else if (size <= this.buf.capacity()) {								//if this.buffer will be full with the additional bytes from the src buffer and must be written to the channel
 			//# Too much for this buffer, but not a full buffer's worth,		// and the src buffer would fill a whole new buffer
 			//# so we'll go ahead and copy.
-			ByteBuffer slice = src.slice();
-			slice.limit(available);
-			this.buf.put(slice);									// fills the free space of this.buffer with bytes from the src buffer
+
+			WireHelpers.writeSlice(src, available, this.buf);		// fills the free space of this.buffer with bytes from the src buffer
 
 			this.buf.rewind();										// sets the position of this buffer to its beginning
 			while (this.buf.hasRemaining()) {						// as long as there are bytes left in this.buffer to write on the channel

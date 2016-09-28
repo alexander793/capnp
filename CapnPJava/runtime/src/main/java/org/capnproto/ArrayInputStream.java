@@ -36,9 +36,7 @@ public final class ArrayInputStream implements BufferedInputStream {
 	public final int read(ByteBuffer dst) throws IOException {
 		int size = dst.remaining();									//number of bytes remaining in the destination buffer
 
-		ByteBuffer slice = this.buf.slice();
-		slice.limit(size);
-		dst.put(slice);												// fills the destination buffer with bytes from this.buffer
+		WireHelpers.writeSlice(this.buf, size, dst);				// fills the destination buffer with bytes from this.buffer
 
 		this.buf.position(this.buf.position() + size);				//updates the position of the not read bytes
 		return size;												// returns number of bytes read to the destination buffer
