@@ -23,10 +23,12 @@ package org.capnproto;
 
 public class EnumList {
 
-	static <T> T clampOrdinal(T values[], short ordinal) {		// selects an object of an array at the specified index
+	// selects an object of an array at the specified index
+	static <T> T clampOrdinal(T values[], short ordinal) {
 		int index = ordinal;
-		if (ordinal < 0 || ordinal >= values.length) {			// if the ordinal parameter isn't a possible index of the array, then the last Object of the array is selected 
-			index = values.length - 1;							// -> probably a default enum entry
+		// if the ordinal parameter isn't a possible index of the array, then the last Object of the array is selected 
+		if (ordinal < 0 || ordinal >= values.length) {
+			index = values.length - 1;
 		}
 		return values[index];
 	}

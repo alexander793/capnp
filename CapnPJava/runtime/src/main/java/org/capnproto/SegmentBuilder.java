@@ -56,8 +56,10 @@ public final class SegmentBuilder extends SegmentReader {
 			return FAILED_ALLOCATION; // no space left;
 		} else {
 			int result = this.pos;
-			this.pos += amount;					// allocate the number of words
-			return result;						// return the previous position of the buffer
+			// allocate the number of words
+			this.pos += amount;
+			// return the previous position of the buffer
+			return result;
 		}
 	}
 

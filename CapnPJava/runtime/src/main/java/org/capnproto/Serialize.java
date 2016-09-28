@@ -34,7 +34,7 @@ public final class Serialize {
 	static ByteBuffer makeByteBuffer(int bytes) {
 		ByteBuffer result = ByteBuffer.allocate(bytes);		//creates a bytebuffer with space for as many bytes as given in the paramter
 		result.order(ByteOrder.LITTLE_ENDIAN);				// orders the buffer to little endian
-		result.mark();										// sets the position of the buffer to the first element ?
+		result.mark();
 		return result;
 	}
 
@@ -57,12 +57,12 @@ public final class Serialize {
 		fillBuffer(firstWord, bc);											//fill the new created buffer with the first 8 bytes of the channel
 
 		int segmentCount = 1 + firstWord.getInt(0);							//gets the value of the first 4 bytes -> number of segments -1
-													// +1 to get the real number of segments
+		// +1 to get the real number of segments
 		int segment0Size = 0;												// size of the first segment initiated
 		/* ? */
 		if (segmentCount > 0) {												// if the message is not empty
-								// if there are no segments in the message, the first 4 bytes value will be -1
-								//    -> definition of the capn proto encoding: the first 4 bytes contain the number of segments -1
+			// if there are no segments in the message, the first 4 bytes value will be -1
+			//    -> definition of the capn proto encoding: the first 4 bytes contain the number of segments -1
 			segment0Size = firstWord.getInt(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION);								// get the size of the first segment from the second 4 bytes
 		}
 
@@ -77,19 +77,19 @@ public final class Serialize {
 
 		if (segmentCount > 1) {													// if there is more than 1 segment in the message
 			ByteBuffer moreSizesRaw = makeByteBuffer(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION * (segmentCount & ~1));	//	& ~1 turns the first bit of segmentCount to 0
-																				// (means it creates a buffer with an even number of 4 byte blocks) 
-																				// the sequenz of the message after the first 4 bytes specifies the sizes of each segment
-																				// there are 4 bytes for each size specification
-																				// so this buffer will contain the size specifications of the segments (except the first one)
-																				// if segmentCount is an uneven number, ~1 subtracts 1 
-																				//   -> the buffer is exactly as long as needed to specify the rest of the segment sizes
-																				// if segmentCount is an even number, ~1 does nothing
-																				//   -> the buffer is 4 bytes longer than needed
+			// (means it creates a buffer with an even number of 4 byte blocks) 
+			// the sequenz of the message after the first 4 bytes specifies the sizes of each segment
+			// there are 4 bytes for each size specification
+			// so this buffer will contain the size specifications of the segments (except the first one)
+			// if segmentCount is an uneven number, ~1 subtracts 1 
+			//   -> the buffer is exactly as long as needed to specify the rest of the segment sizes
+			// if segmentCount is an even number, ~1 does nothing
+			//   -> the buffer is 4 bytes longer than needed
 			fillBuffer(moreSizesRaw, bc);										// fills new buffer with the size specifications from the second to the last segment
-											// this bytes specify the sizes of each segment
+			// this bytes specify the sizes of each segment
 			for (int ii = 0; ii < segmentCount - 1; ++ii) {			// maximum is segmentCount -1, because the size of segment 0 is already read
 				int size = moreSizesRaw.getInt(ii * Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION);				//iterates through the new buffer and takes the values of every 4-byte-block 
-														// sets the attribute size to the size of the current byte
+				// sets the attribute size to the size of the current byte
 				moreSizes.add(size);								//adds these size of the current byte to the moreSizes List
 				totalWords += size;									//sums up the sizes of all segments
 			}
@@ -100,10 +100,10 @@ public final class Serialize {
 		}
 
 		ByteBuffer allSegments = makeByteBuffer(totalWords * Constants.BYTES_PER_WORD);		//creates a new buffer with as much space as the size of all 
-																						//segments times 8 bytes per word
-																						//-> buffer with as many words the total size of all segments
+		//segments times 8 bytes per word
+		//-> buffer with as many words the total size of all segments
 		fillBuffer(allSegments, bc);							//fills new buffer with the segments content
-										//where should be a lot of zeros
+		//where should be a lot of zeros
 		ByteBuffer[] segmentSlices = new ByteBuffer[segmentCount];			//creates new array for segment slices with as many entrys as segments in the message
 
 		allSegments.rewind();									// sets the position of the buffer to zero and the mark is dicarded
@@ -200,7 +200,7 @@ public final class Serialize {
 		table.order(ByteOrder.LITTLE_ENDIAN);
 
 		table.putInt(0, segments.length - 1);			//puts the last 4 bytes of the segment-buffer in the first 4 bytes of the to be sent bytebuffer
-												//the last element of the segments array should contain the number of segments
+		//the last element of the segments array should contain the number of segments
 		for (int i = 0; i < segments.length; ++i) {
 			table.putInt(Constants.BYTES_PER_SEGMENT_SIZE_SPECIFICATION * (i + 1), segments[i].limit() / Constants.BYTES_PER_WORD);
 		}

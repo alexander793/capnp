@@ -25,9 +25,15 @@ public final class GeneratedClassSupport {
 
 	public static SegmentReader decodeRawBytes(String s) {
 		try {
-			java.nio.ByteBuffer buffer = java.nio.ByteBuffer.wrap(s.getBytes("ISO_8859-1")).asReadOnlyBuffer();		// encodes the string to ISO_8859-1 and wraps the returned ByteArray to a read-only ByteBuffer
-			buffer.order(java.nio.ByteOrder.LITTLE_ENDIAN);															// orders the bytes of the byte buffer to little endian
-			return new SegmentReader(buffer, new ReaderArena(new java.nio.ByteBuffer[0], 0x7fffffffffffffffL));		// returns a SegmentReader how should be able to read the given bytes
+			/*
+			 * This method encodes the string to ISO_8859-1 and wraps the returned ByteArray to a
+			 * read-only ByteBuffer.
+			 * Then it orders the bytes of the byte buffer to little endian and
+			 * returns a SegmentReader who should be able to read the given bytes.
+			 */
+			java.nio.ByteBuffer buffer = java.nio.ByteBuffer.wrap(s.getBytes("ISO_8859-1")).asReadOnlyBuffer();
+			buffer.order(java.nio.ByteOrder.LITTLE_ENDIAN);
+			return new SegmentReader(buffer, new ReaderArena(new java.nio.ByteBuffer[0], 0x7fffffffffffffffL));
 		}
 		catch (Exception e) {
 			throw new Error("could not decode raw bytes from String");

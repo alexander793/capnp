@@ -24,28 +24,48 @@ package org.capnproto;
 import java.nio.ByteBuffer;
 
 
-final class ListPointer {												// class for the CapnProto ListPointer Encoding object
+// class for the CapnProto ListPointer Encoding object
+final class ListPointer {
 
-	public static byte elementSize(long ref) {							// gives the size of an element in the list
-		return (byte) (WirePointer.upper32Bits(ref) & 7);				// takes the higher 32 Bits of the ListPointer and &-joins them with 7 (=1110)
+	public static byte elementSize(long ref) {
+		/*
+		 * This method gives the size of an element in the list.
+		 * It takes the higher 32 Bits of the ListPointer and &-joins them with 7 (=1110),
+		 * which returns the value of the 33.,34.,35. bit -> encoded size of each element.
+		 */
+		return (byte) (WirePointer.upper32Bits(ref) & 7);
 	}
 
-	public static int elementCount(long ref) {							// gets the higher 32 bits of the list encoding 
-		return WirePointer.upper32Bits(ref) >>> 3;						// and shifts it 3 bits to the lower direction, cutting the size information off
-		// returning the number of elements in the list
+	public static int elementCount(long ref) {
+		/*
+		 * This method gets the higher 32 bits of the list encoding and
+		 * shifts it 3 bits to the lower direction, cutting the size information off.
+		 * It returns the number of elements in the list.
+		 */
+		return WirePointer.upper32Bits(ref) >>> 3;
 	}
 
-	public static int inlineCompositeWordCount(long ref) {				// if the elements of the list are structs
+	public static int inlineCompositeWordCount(long ref) {
+		// if the elements of the list are structs
 		return elementCount(ref);
 	}
 
-	public static void set(ByteBuffer buffer, int offset, byte elementSize, int elementCount) {			// sets new values for the number of elements and their size
-		// TODO length assertion
-		buffer.putInt(Constants.BYTES_PER_WORD * offset + 4, (elementCount << 3) | elementSize);		// multiplies with Bytes_per_word, because the offset in the ListPointer is defined in words; +4 to jump over the 'kind' value
+	public static void set(ByteBuffer buffer, int offset, byte elementSize, int elementCount) {
+		/*
+		 * This method sets new values for the number of elements and their size.
+		 * It multiplies with Bytes_per_word, because the offset in the ListPointer is defined in
+		 * words; +4 to jump over the 'kind' value
+		 * TODO length assertion
+		 */
+		buffer.putInt(Constants.BYTES_PER_WORD * offset + 4, (elementCount << 3) | elementSize);
 	}
 
-	public static void setInlineComposite(ByteBuffer buffer, int offset, int wordCount) {				// if the elements of the list are structs, this method writes a 7 in the C Block and the number of words in the D Block
-		// TODO length assertion
+	public static void setInlineComposite(ByteBuffer buffer, int offset, int wordCount) {
+		/*
+		 * If the elements of the list are structs, this method writes a 7 in the C Block(size
+		 * specification) and the number of words in the list to the D Block.
+		 * TODO length assertion
+		 */
 		buffer.putInt(Constants.BYTES_PER_WORD * offset + 4, (wordCount << 3) | ElementSize.INLINE_COMPOSITE);
 	}
 }

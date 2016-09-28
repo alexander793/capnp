@@ -33,7 +33,8 @@ public class ListBuilder {
 	final int ptr; // byte offset to front of list
 	final int elementCount;
 	final int step; // in bits
-	final int structDataSize; // in bits				// if the List contains a struct, this variable defines the size of its data block
+	// if the List contains a struct, this variable defines the size of its data block
+	final int structDataSize; // in bits				
 	final short structPointerCount;
 
 	public ListBuilder(SegmentBuilder segment, int ptr, int elementCount, int step, int structDataSize, short structPointerCount) {
@@ -51,7 +52,8 @@ public class ListBuilder {
 
 	protected boolean _getBooleanElement(int index) {
 		int bitIndex = Math.multiplyExact(index, this.step);
-		byte b = this.segment.buffer.get(this.ptr + bitIndex / Constants.BITS_PER_BYTE); // jumps to the to be checked byte
+		// jumps to the to be checked byte
+		byte b = this.segment.buffer.get(this.ptr + bitIndex / Constants.BITS_PER_BYTE);
 		return (b & (1 << (bitIndex % Constants.BITS_PER_BYTE))) != 0;
 	}
 
@@ -80,11 +82,15 @@ public class ListBuilder {
 	}
 
 	protected void _setBooleanElement(int index, boolean value) {
-		int bitOffset = Math.multiplyExact(index, this.step);										// offset to the to be set Bit
-		byte bitnum = (byte) (bitOffset % Constants.BITS_PER_BYTE);				// the number of the Bit in the byte it is in
-		int position = (this.ptr + bitOffset / Constants.BITS_PER_BYTE);// position of the byte in the data section
+		// offset to the to be set Bit
+		int bitOffset = Math.multiplyExact(index, this.step);
+		// the number of the Bit in the byte it is in
+		byte bitnum = (byte) (bitOffset % Constants.BITS_PER_BYTE);
+		// position of the byte in the data section
+		int position = (this.ptr + bitOffset / Constants.BITS_PER_BYTE);
 		byte oldValue = this.segment.buffer.get(position);
-		this.segment.buffer.put(position, (byte) ((oldValue & (~(1 << bitnum))) | ((value ? 1 : 0) << bitnum)));	// the left side of the | zeros the selected bit; the right side sets the new value
+		// the left side of the '|' zeros the selected bit; the right side sets the new value
+		this.segment.buffer.put(position, (byte) ((oldValue & (~(1 << bitnum))) | ((value ? 1 : 0) << bitnum)));
 	}
 
 	protected void _setByteElement(int index, byte value) {
@@ -112,10 +118,11 @@ public class ListBuilder {
 	}
 
 	protected final <T> T _getStructElement(StructBuilder.Factory<T> factory, int index) {
-		int structData = this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE;		// gets the start of the struct data section
-		int structPointers = (structData + (this.structDataSize / Constants.BITS_PER_BYTE)) / Constants.BYTES_PER_WORD;	// gets the start of the pointer section
-		//devides by Constants.Bytes_per_word, because the structData value is given in bytes but CapnProto defines this value in words
-
+		// gets the start of the structs data section
+		int structData = this.ptr + Math.multiplyExact(index, this.step) / Constants.BITS_PER_BYTE;
+		// gets the start of the pointer section
+		// devides by Constants.Bytes_per_word, because the structData value is given in bytes but CapnProto defines this value in words
+		int structPointers = (structData + (this.structDataSize / Constants.BITS_PER_BYTE)) / Constants.BYTES_PER_WORD;
 		return factory.constructBuilder(this.segment, structData, structPointers, this.structDataSize, this.structPointerCount);
 	}
 

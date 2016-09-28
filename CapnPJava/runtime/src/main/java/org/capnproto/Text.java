@@ -94,10 +94,11 @@ public final class Text {
 		}
 
 		public ByteBuffer asByteBuffer() {
-			ByteBuffer dup = this.buffer.asReadOnlyBuffer();
-			dup.position(this.offset);
-			ByteBuffer result = dup.slice();
+			this.buffer.mark();
+			this.buffer.position(this.offset);
+			ByteBuffer result = this.buffer.asReadOnlyBuffer().slice();
 			result.limit(this.size);
+			this.buffer.reset();
 			return result;
 		}
 
@@ -105,9 +106,10 @@ public final class Text {
 		public final String toString() {
 			byte[] bytes = new byte[this.size];
 
-			ByteBuffer dup = this.buffer.duplicate();
-			dup.position(this.offset);
-			dup.get(bytes, 0, this.size);
+			this.buffer.mark();
+			this.buffer.position(this.offset);
+			this.buffer.get(bytes, 0, this.size);
+			this.buffer.reset();
 
 			try {
 				return new String(bytes, "UTF-8");
@@ -138,10 +140,11 @@ public final class Text {
 		}
 
 		public ByteBuffer asByteBuffer() {
-			ByteBuffer dup = this.buffer.duplicate();
-			dup.position(this.offset);
-			ByteBuffer result = dup.slice();
+			this.buffer.mark();
+			this.buffer.position(this.offset);
+			ByteBuffer result = this.buffer.slice();
 			result.limit(this.size);
+			this.buffer.reset();
 			return result;
 		}
 
@@ -149,9 +152,10 @@ public final class Text {
 		public final String toString() {
 			byte[] bytes = new byte[this.size];
 
-			ByteBuffer dup = this.buffer.duplicate();
-			dup.position(this.offset);
-			dup.get(bytes, 0, this.size);
+			this.buffer.mark();
+			this.buffer.position(this.offset);
+			this.buffer.get(bytes, 0, this.size);
+			this.buffer.reset();
 
 			try {
 				return new String(bytes, "UTF-8");

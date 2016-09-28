@@ -37,15 +37,22 @@ public final class MessageBuilder {
 		this.arena = new BuilderArena(firstSegmentWords, allocationStrategy);
 	}
 
-	private AnyPointer.Builder getRootInternal() {								// creates a segment with a pointer to it
-		SegmentBuilder rootSegment = this.arena.segments.get(0);				// gets the first segment of this message
-		if (rootSegment.currentSize() == 0) {									// if the first segment is still empty
-			int location = rootSegment.allocate(1);								// reserves the first byte of the first segment
+	private AnyPointer.Builder getRootInternal() {
+		/*
+		 * This method creates a segment with a pointer to it.
+		 * Firstly it gets the first segment of this message.
+		 * If it is still empty, it reserves the first byte of the first segment and
+		 * returns a segment with a pointer to the new allocated location.
+		 * Otherwise it returns a segment with a pointer to its start.
+		 */
+		SegmentBuilder rootSegment = this.arena.segments.get(0);
+		if (rootSegment.currentSize() == 0) {
+			int location = rootSegment.allocate(1);
 			if (location == SegmentBuilder.FAILED_ALLOCATION) { throw new Error("could not allocate root pointer"); }
 			if (location != 0) { throw new Error("First allocated word of new segment was not at offset 0"); }
-			return new AnyPointer.Builder(rootSegment, location);				// creates a segment with a pointer to the new allocated location
+			return new AnyPointer.Builder(rootSegment, location);
 		} else {
-			return new AnyPointer.Builder(rootSegment, 0);						// creates a segment with a pointer to its start
+			return new AnyPointer.Builder(rootSegment, 0);
 		}
 	}
 
@@ -61,7 +68,8 @@ public final class MessageBuilder {
 		return this.getRootInternal().initAs(factory);
 	}
 
-	public final java.nio.ByteBuffer[] getSegmentsForOutput() {					//copies the segments of this message to an array
+	public final java.nio.ByteBuffer[] getSegmentsForOutput() {
+		//copies the segments of this message to an array
 		return this.arena.getSegmentsForOutput();
 	}
 }

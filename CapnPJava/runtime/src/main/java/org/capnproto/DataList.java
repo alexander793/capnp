@@ -42,14 +42,15 @@ public final class DataList {
 
 	public static final Factory factory = new Factory();
 
-	public static final class Reader extends ListReader implements Iterable<Data.Reader> {					//	Reader for ListElements
+	//	Reader for ListElements
+	public static final class Reader extends ListReader implements Iterable<Data.Reader> {
 
 		public Reader(SegmentReader segment, int ptr, int elementCount, int step, int structDataSize, short structPointerCount,
 				int nestingLimit) {
 			super(segment, ptr, elementCount, step, structDataSize, structPointerCount, nestingLimit);
 		}
 
-		public Data.Reader get(int index) {																	// probably gets a reader for an element of a list at a specified index
+		public Data.Reader get(int index) {
 			return _getPointerElement(Data.factory, index);
 		}
 

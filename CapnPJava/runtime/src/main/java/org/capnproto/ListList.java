@@ -58,7 +58,6 @@ public final class ListList {
 		public T get(int index) {
 			return _getPointerElement(this.factory, index);
 		}
-
 	}
 
 	public static final class Builder<T> extends ListBuilder {

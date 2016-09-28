@@ -103,14 +103,26 @@ public final class BuilderArena implements Arena {
 	}
 
 	public final ByteBuffer[] getSegmentsForOutput() {
-		ByteBuffer[] result = new ByteBuffer[this.segments.size()];					// initialize ouput
-		for (int ii = 0; ii < this.segments.size(); ++ii) {							// iterates over the segments of this arena
-			SegmentBuilder segment = segments.get(ii);								// put the (ii)-selected segment of segements to a new variable
-			segment.buffer.rewind();												// set the pointer of the new variable to its beginning
-			ByteBuffer slice = segment.buffer.slice();								// copies the new segment to a new bytebuffer
-			slice.limit(segment.currentSize() * Constants.BYTES_PER_WORD);			// aligns the new buffer to as many words as the segment is long
-			slice.order(ByteOrder.LITTLE_ENDIAN);									// orders the bytes in little endian
-			result[ii] = slice;														// puts the new segmentbuffer in a result array
+		/*
+		 * This method will get the segments of the message as a ByteArray. This is done by:
+		 * First, initializing an output
+		 * Then iterate trough the segments of this arena.
+		 * Put the (ii)-selected segment of segements to a new variable.
+		 * Set the pointer of the new variable to its beginning and
+		 * copy the new segment to a new bytebuffer.
+		 * Align the new buffer to as many words as the segment is long.
+		 * Order the bytes to little endian and
+		 * put the new segmentbuffer in a result array.
+		 */
+
+		ByteBuffer[] result = new ByteBuffer[this.segments.size()];
+		for (int ii = 0; ii < this.segments.size(); ++ii) {
+			SegmentBuilder segment = segments.get(ii);
+			segment.buffer.rewind();
+			ByteBuffer slice = segment.buffer.slice();
+			slice.limit(segment.currentSize() * Constants.BYTES_PER_WORD);
+			slice.order(ByteOrder.LITTLE_ENDIAN);
+			result[ii] = slice;
 		}
 		return result;
 	}

@@ -30,16 +30,21 @@ public final class ArrayInputStream implements BufferedInputStream {
 	public final ByteBuffer buf;
 
 	public ArrayInputStream(ByteBuffer buf) {
-		this.buf = buf.asReadOnlyBuffer();				// creates a read-only copy of the ByteBuffer
+		// creates a read-only copy of the ByteBuffer
+		this.buf = buf.asReadOnlyBuffer();
 	}
 
 	public final int read(ByteBuffer dst) throws IOException {
-		int size = dst.remaining();									//number of bytes remaining in the destination buffer
+		//number of bytes remaining in the destination buffer
+		int size = dst.remaining();
 
-		WireHelpers.writeSlice(this.buf, size, dst);				// fills the destination buffer with bytes from this.buffer
+		// fills the destination buffer with bytes from this.buffer
+		WireHelpers.writeSlice(this.buf, size, dst);
 
-		this.buf.position(this.buf.position() + size);				//updates the position of the not read bytes
-		return size;												// returns number of bytes read to the destination buffer
+		//updates the position of the not read bytes
+		this.buf.position(this.buf.position() + size);
+		// returns number of bytes read to the destination buffer
+		return size;
 	}
 
 	public final ByteBuffer getReadBuffer() {
@@ -51,6 +56,6 @@ public final class ArrayInputStream implements BufferedInputStream {
 	}
 
 	public final boolean isOpen() {
-		return true;												// why always return true ?
+		return true;
 	}
 }

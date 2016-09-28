@@ -37,42 +37,63 @@ public final class BufferedOutputStreamWrapper implements BufferedOutputStream {
 	}
 
 	public final int write(ByteBuffer src) throws IOException {
-		int available = this.buf.remaining();						// number of free bytes in this.buffer
-		int size = src.remaining();									// number of bytes to be written from the src buffer to this.buffer
-		if (size <= available) {									// if there is enough space left in this.buffer for the bytes from the src buffer
-			this.buf.put(src);										// writes the bytes from the src to this.buffer
-		} else if (size <= this.buf.capacity()) {								//if this.buffer will be full with the additional bytes from the src buffer and must be written to the channel
-			//# Too much for this buffer, but not a full buffer's worth,		// and the src buffer would fill a whole new buffer
-			//# so we'll go ahead and copy.
+		// number of free bytes in this.buffer
+		int available = this.buf.remaining();
+		// number of bytes to be written from the src buffer to this.buffer
+		int size = src.remaining();
+		// if there is enough space left in this.buffer for the bytes from the src buffer
+		// writes the bytes from the src to this.buffer
+		if (size <= available) {
+			this.buf.put(src);
+		} else if (size <= this.buf.capacity()) {
+			/*
+			 * If this.buffer will be full with the additional bytes from the src buffer and must be
+			 * written to the channel and the src buffer would fill a whole new buffer, then:
+			 * Fill the free space of this.buffer with bytes from the src buffer.
+			 * Set the position of this buffer to its beginning.
+			 * As long as there are bytes left in this.buffer to write on the channel,
+			 * write this buffer to the channel
+			 * When all bytes are written, set the position back to the beginning of the buffer.
+			 * Fill the fresh buffer with the rest of the src buffer.
+			 * This won't take the whole space of the buffer, because of the IF-statement.
+			 * Then update the pointer of the src buffer to the next byte that has to be written.
+			 */
 
-			WireHelpers.writeSlice(src, available, this.buf);		// fills the free space of this.buffer with bytes from the src buffer
-
-			this.buf.rewind();										// sets the position of this buffer to its beginning
-			while (this.buf.hasRemaining()) {						// as long as there are bytes left in this.buffer to write on the channel
-				this.inner.write(this.buf);							// writes this buffer to the channel
+			WireHelpers.writeSlice(src, available, this.buf);
+			this.buf.rewind();
+			while (this.buf.hasRemaining()) {
+				this.inner.write(this.buf);
 			}
-			this.buf.rewind();										// all bytes are written, so the position is set back to the beginning of the buffer
+			this.buf.rewind();
+			src.position(src.position() + available);
+			this.buf.put(src);
 
-			src.position(src.position() + available);				// updates the pointer of the src buffer to the next byte that has to be written
-			this.buf.put(src);										// fills the fresh buffer with the rest of the src buffer
-			// won't take the whole space of the buffer, because of the IF-statement
-		} else {													// if the src buffer is bigger than this buffers capacity, it wouldn't make sense to copy all the data first to a buffer and then rite it to the channel
-			// so we write all the bytes from the src buffer directly to the channel
-			//# Writing so much data that we might as well write
-			//# directly to avoid a copy.
+		} else {
+			/*
+			 * If the src buffer is bigger than this buffers capacity, it wouldn't make sense to
+			 * copy all the data first to a buffer and then write it to the channel.
+			 * So we write all the bytes from the src buffer directly to the channel.
+			 * First save the position of the last filled byte of the buffer.
+			 * Then set its position to the beginning.
+			 * Create a new buffer as big as the actual content of this.buffer.
+			 * -> empty space of this.buffer is cut off
+			 * Write the filled bytes of this.buffer to the channel.
+			 * Then write the bytes from the src buffer to the channel.
+			 */
 
-			int pos = this.buf.position();							//saves the position of the last filled byte of the buffer
-			this.buf.rewind();										// sets the position of the buffer to its beginning
+			int pos = this.buf.position();
+			this.buf.rewind();
 			ByteBuffer slice = this.buf.slice();
-			slice.limit(pos);										// creates a new buffer as big as the actual content of this.buffer -> empty space of this.buffer is cut off
+			slice.limit(pos);
 			while (slice.hasRemaining()) {
-				this.inner.write(slice);							// writes the filled bytes of this.buffer to the channel
+				this.inner.write(slice);
 			}
 			while (src.hasRemaining()) {
-				this.inner.write(src);								// writes the bytes from the src buffer to the chanel
+				this.inner.write(src);
 			}
 		}
-		return size;												//returns the number of bytes of the source channel -> maybe it should be updated during the write process ?
+		//returns the number of bytes of the source channel -> maybe it should be updated during the write process ?
+		return size;
 	}
 
 	public final ByteBuffer getWriteBuffer() {
@@ -87,7 +108,8 @@ public final class BufferedOutputStreamWrapper implements BufferedOutputStream {
 		return this.inner.isOpen();
 	}
 
-	public final void flush() throws IOException {					// writes all the filled bytes of this.buffer to the channel and clears the buffer
+	public final void flush() throws IOException {
+		// writes all the filled bytes of this.buffer to the channel and clears the buffer
 		int pos = this.buf.position();
 		this.buf.rewind();
 		this.buf.limit(pos);

@@ -33,10 +33,11 @@ public final class ArrayOutputStream implements BufferedOutputStream {
 		this.buf = buf.duplicate();
 	}
 
-	public final int write(ByteBuffer src) throws IOException {				// if this.buffer has enough space to take the content of the src buffer, than write that content to this.buffer
-		int available = this.buf.remaining();
+	public final int write(ByteBuffer src) throws IOException {
+		// if this.buffer has enough space to take the content of the src buffer,
+		// than write that content to this.buffer
 		int size = src.remaining();
-		if (available < size) { throw new IOException("backing buffer was not large enough"); }
+		if (this.buf.remaining() < size) { throw new IOException("backing buffer was not large enough"); }
 		this.buf.put(src);
 		return size;
 	}
